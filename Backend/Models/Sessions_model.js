@@ -1,0 +1,17 @@
+const mongoose = require("mongoose");
+const Session_schema = new mongoose.Schema({
+  User_id: {
+    type: String,
+    required: [true, "needed user id "],
+  },
+  RefreshHashToken: {
+    type: String,
+    required: [true, "needed the refresh token !"],
+  },
+  revoked: {
+    type: Boolean,
+    required: [true, "Must specify either the revoked true or not !"],
+  }
+})
+const Session_model = mongoose.model("Session_model", Session_schema);
+module.exports = Session_model;
