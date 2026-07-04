@@ -2,9 +2,11 @@ const express = require("express");
 const { PORT, DATABASE_KEY } = require("./server.js")
 const { ConnectToDatabase } = require("./Connections/connect.js")
 const morgan = require("morgan");
+const cookieParser = require("cookie-parser")
 const { auth_router } = require("./Routes/auth_router.js");
 const app = express();
 //middlewares
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extends: true }))
 app.use(morgan("dev"));

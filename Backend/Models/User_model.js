@@ -16,7 +16,8 @@ const user_schema = new mongoose.Schema({
   verified: {
     type: Boolean,
     required: [true, "must specify the status !"]
-  }
+  },
+
 })
 const usermodel = mongoose.model("user_model", user_schema);
 module.exports = usermodel
