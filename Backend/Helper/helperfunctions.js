@@ -71,6 +71,8 @@ class AuthForEveryAccess {
     }
   }
 }
+const crypto = require('crypto');
+const otp = crypto.randomInt(100000, 999999).toString();
 module.exports = {
   GetHash,
   ApiResponse,
@@ -79,4 +81,5 @@ module.exports = {
   SendCookie,
   AuthForGettingAcces,
   AuthForEveryAccess,
+  otp,
 }

@@ -4,6 +4,7 @@ const { ConnectToDatabase } = require("./Connections/connect.js")
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser")
 const { auth_router } = require("./Routes/auth_router.js");
+const { transporter } = require("./Controller/transporter.js")
 const app = express();
 //middlewares
 app.use(cookieParser());
