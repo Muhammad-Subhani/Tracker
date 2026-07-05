@@ -1,7 +1,13 @@
 const usermodel = require("../Models/User_model.js");
 const SessionModel = require("../Models/Sessions_model.js");
-const { GetHash, ApiResponse, AuthenticateSignUP, AuthenticateLogin, SendCookie } = require("../Helper/helperfunctions.js")
-const { Get_Refresh_Token, Get_Access_token } = require("../Helper/JwtToken.js")
+const { GetHash,
+  ApiResponse,
+  AuthenticateSignUP,
+  AuthenticateLogin,
+  SendCookie,
+  AuthForGettingAcces,
+  AuthForEveryAccess } = require("../Helper/helperfunctions.js")
+const { Get_Refresh_Token, Get_Access_token, DecryptToken } = require("../Helper/JwtToken.js")
 
 async function SignupFunction(req, res) {
   try {
@@ -56,10 +62,37 @@ async function LoginFunction(req, res) {
     return ApiResponse.failure(res, errmsg, 500);
   }
 }
-// async function GetAccessToken(req , res ){}
-
-
-
+async function GetAccessToken(req, res) {
+  const cookie = AuthForGettingAcces.CheckForCookie(req, res);
+  const sessionObject = AuthForGettingAcces.RevokeCheck(cookie, res);
+  const userObject = await usermodel.findOne({ _id: sessionObject.User_id });
+  const key = await Get_Refresh_Token(userObject);
+  const hash = GetHash(key);
+  sessionObject.RefreshHashToken = hash;
+  await sessionObject.save();
+  const Access_Token = await Get_Access_token(sessionObject);
+  SendCookie(key);
+  return ApiResponse.success(res, "Revived Access Token ", { username: userObject.Name, Token: key, Access: Access_Token })
+}
+async function FunctionValidation(req, res) {
+  const token = AuthForEveryAccess.CheckBearer(req, res);
+  const obj = AuthForEveryAccess.RevokeCheck(res, token);
+  ApiResponse.success(res, "You Are Authorized !!", { id: obj.User_id })
+  // ==able to access any service now ==
+}
+async function LogoutOneDevice(req, res) {
+  const cookie = AuthForGettingAcces.CheckForCookie(req, res);
+  const sessionObject = AuthForGettingAcces.RevokeCheck(cookie, res);
+  sessionObject.revoked = true;
+  await sessionObject.save();
+  // ==g0 to the main landing page ==
+}
+async function LogoutAllDevices(req, res) {
+  const cookie = req.cookies.TempToken;
+  const data = DecryptToken(cookie);
+  await SessionModel.updateMany({ User_id: data._id }, { $set: { revoked: true } });
+  // == go to main landing page ==
+}
 
 
 
@@ -68,4 +101,8 @@ async function LoginFunction(req, res) {
 module.exports = {
   SignupFunction,
   LoginFunction,
+  GetAccessToken,
+  FunctionValidation,
+  LogoutOneDevice,
+  LogoutAllDevices,
 }

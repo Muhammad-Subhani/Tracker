@@ -20,8 +20,17 @@ async function Get_Refresh_Token(obj) {
   }, JWT_TOKEN, { expiresIn: "7d" })
 };
 
+async function DecryptToken(token) {
+  try {
+    return JWT.verify(token, JWT_TOKEN);
+  } catch (error) {
+    console.error("error :", error);
+    return null;
+  }
+}
 
 module.exports = {
   Get_Access_token,
   Get_Refresh_Token,
+  DecryptToken,
 }
