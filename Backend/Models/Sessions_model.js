@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const Session_schema = new mongoose.Schema({
   User_id: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user_model",
     required: [true, "needed user id "],
   },
   RefreshHashToken: {

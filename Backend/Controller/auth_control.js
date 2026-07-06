@@ -1,14 +1,17 @@
 const usermodel = require("../Models/User_model.js");
 const SessionModel = require("../Models/Sessions_model.js");
+const OtpModel = require("../Models/OtpModel.js");
 const { GetHash,
   ApiResponse,
   AuthenticateSignUP,
   AuthenticateLogin,
   SendCookie,
   AuthForGettingAcces,
-  AuthForEveryAccess } = require("../Helper/helperfunctions.js")
+  AuthForEveryAccess,
+  otp } = require("../Helper/helperfunctions.js")
+const { generateEmailTemplate } = require("../Helper/Emailstruct.js")
 const { Get_Refresh_Token, Get_Access_token, DecryptToken } = require("../Helper/JwtToken.js")
-
+const { sendEmail } = require("./transporter.js")
 async function SignupFunction(req, res) {
   try {
     const { username, email, password } = req.body;
@@ -21,18 +24,17 @@ async function SignupFunction(req, res) {
       password: Hash_Password,
       verified: false,
     });
-
-    // making refresh token 
-    const key = await Get_Refresh_Token(result);
-    const Hashed_RefToken = GetHash(key);
-    const session_res = await SessionModel.create({
-      User_id: result._id,
-      RefreshHashToken: Hashed_RefToken,
-      revoked: false,
-    });
-    const Access_Token = await Get_Access_token(session_res);
-    SendCookie(res, key);
-    return ApiResponse.success(res, "Successfully Created User Entry !", 200, { username: result.Name, Tokwn: key, Access: Access_Token });
+    // otp part 
+    const otp = opt();
+    const Hahs_OTP = GetHash(opt);
+    const otp_entry = await OtpModel.create({
+      User: result._id,
+      email: result.email,
+      OTP: Hahs_OTP,
+    })
+    const Email_html = generateEmailTemplate(otp);
+    await sendEmail(email, "OTP Verification", `Your otp is ${otp}`, Email_html);
+    return ApiResponse.success(res, "Successfully Created User Entry GO Validate !", 200, { username: result.Name });
   }
   catch (err) {
     console.error("Error occured ", err)
@@ -83,6 +85,8 @@ async function FunctionValidation(req, res) {
 async function LogoutOneDevice(req, res) {
   const cookie = AuthForGettingAcces.CheckForCookie(req, res);
   const sessionObject = AuthForGettingAcces.RevokeCheck(cookie, res);
+  const Data = DecryptToken(cookie);
+  if (Data.verified == false) ApiResponse.failure(res, "You are not authorized !", 500);
   sessionObject.revoked = true;
   await sessionObject.save();
   // ==g0 to the main landing page ==
@@ -93,7 +97,30 @@ async function LogoutAllDevices(req, res) {
   await SessionModel.updateMany({ User_id: data._id }, { $set: { revoked: true } });
   // == go to main landing page ==
 }
+async function ValidateOtp(req, res) {
+  const { email, otp } = req.body;
+  const hahsed_otp = GetHash(otp);
+  const Otp_data = await OtpModel.findOne({ email: email, OTP: hahsed_otp });
+  if (!Otp_data) return ApiResponse.failure(res, "Your data wasnt created !", 500);
+  const ValidatedUser = await usermodel.findByIdAndUpdate(Otp_data.User, {
+    $set: {
+      verified: true,
+    }
+  }, { new: true });
+  if (!ValidatedUser) return ApiResponse.failure(res, "Failed to validate User !", 500);
+  // making refresh token 
+  const key = await Get_Refresh_Token(ValidatedUser);
+  const Hashed_RefToken = GetHash(key);
+  const session_res = await SessionModel.create({
+    User_id: ValidatedUser._id,
+    RefreshHashToken: Hashed_RefToken,
+    revoked: false,
+  });
+  const Access_Token = await Get_Access_token(session_res);
+  SendCookie(res, key);
+  return ApiResponse.success(res, "Successfully Validated User !", 200, { username: ValidatedUser.Name, token: key, Access: Access_Token });
 
+}
 
 
 
@@ -105,4 +132,5 @@ module.exports = {
   FunctionValidation,
   LogoutOneDevice,
   LogoutAllDevices,
+  ValidateOtp,
 }
