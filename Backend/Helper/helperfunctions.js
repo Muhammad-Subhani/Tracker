@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 const SessionModel = require("../Models/Sessions_model.js")
 const usermodel = require("../Models/User_model.js");
+const OtpModel = require("../Models/OtpModel.js")
 const { DecryptToken } = require("../Helper/JwtToken.js")
 function GetHash(val) {
   return crypto.createHash("sha512").update(val).digest("hex");
@@ -30,7 +31,13 @@ class AuthenticateLogin {
   static async CheckUser(email, res) {
     const entry = await usermodel.findOne({ email: email });
     if (!entry) return ApiResponse.failure(res, "There is no such user try signUp !", 500);
-    else return entry;
+    else VerifyUser.Verify(res, entry);
+    return entry;
+  }
+}
+class VerifyUser {
+  static Verify(res, obj) {
+    if (!obj.verified) return ApiResponse.failure(res, "User NOt Verified !", 400);
   }
 }
 function SendCookie(res, key) {
@@ -72,7 +79,28 @@ class AuthForEveryAccess {
   }
 }
 const crypto = require('crypto');
-const otp = crypto.randomInt(100000, 999999).toString();
+const OTPP = crypto.randomInt(100000, 999999).toString();
+
+class Otp_Helper {
+  static async Check_OTP(hashedotp, email, res) {
+    const entry = await OtpModel.findOne({ email: email, OTP: hashedotp });
+    if (!entry) return ApiResponse.failure(res, "The Otp Expired !!", 400);
+    else return entry;
+  }
+  static async CheckExpiry(obj, res) {
+    const time_now = new Date.now();
+    const TimeAtCreated = new Date(obj.createdAt);
+    const period = (time_now - TimeAtCreated) / 1000 / 60;
+    if (period > 5) {
+      await OtpModel.deleteOne({ _id: obj._id });
+      return ApiResponse.failure(res, "The Otp is expired !", 400);
+    }
+  }
+  static async DeletOtp(obj) {
+    await OtpModel.deleteOne({ _id: obj._id });
+  }
+}
+
 module.exports = {
   GetHash,
   ApiResponse,
@@ -81,5 +109,7 @@ module.exports = {
   SendCookie,
   AuthForGettingAcces,
   AuthForEveryAccess,
-  otp,
+  OTPP,
+  Otp_Helper,
+  VerifyUser,
 }

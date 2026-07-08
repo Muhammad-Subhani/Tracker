@@ -8,10 +8,14 @@ const { GetHash,
   SendCookie,
   AuthForGettingAcces,
   AuthForEveryAccess,
-  otp } = require("../Helper/helperfunctions.js")
+  OTPP,
+  Otp_Helper,
+  VerifyUser } = require("../Helper/helperfunctions.js")
+
 const { generateEmailTemplate } = require("../Helper/Emailstruct.js")
 const { Get_Refresh_Token, Get_Access_token, DecryptToken } = require("../Helper/JwtToken.js")
 const { sendEmail } = require("./transporter.js")
+
 async function SignupFunction(req, res) {
   try {
     const { username, email, password } = req.body;
@@ -25,7 +29,7 @@ async function SignupFunction(req, res) {
       verified: false,
     });
     // otp part 
-    const otp = opt();
+    const otp = OTPP();
     const Hahs_OTP = GetHash(opt);
     const otp_entry = await OtpModel.create({
       User: result._id,
@@ -68,6 +72,7 @@ async function GetAccessToken(req, res) {
   const cookie = AuthForGettingAcces.CheckForCookie(req, res);
   const sessionObject = AuthForGettingAcces.RevokeCheck(cookie, res);
   const userObject = await usermodel.findOne({ _id: sessionObject.User_id });
+  VerifyUser.Verify(res, userObject);
   const key = await Get_Refresh_Token(userObject);
   const hash = GetHash(key);
   sessionObject.RefreshHashToken = hash;
@@ -79,6 +84,7 @@ async function GetAccessToken(req, res) {
 async function FunctionValidation(req, res) {
   const token = AuthForEveryAccess.CheckBearer(req, res);
   const obj = AuthForEveryAccess.RevokeCheck(res, token);
+  VerifyUser.Verify(res, obj);
   ApiResponse.success(res, "You Are Authorized !!", { id: obj.User_id })
   // ==able to access any service now ==
 }
@@ -93,33 +99,42 @@ async function LogoutOneDevice(req, res) {
 }
 async function LogoutAllDevices(req, res) {
   const cookie = req.cookies.TempToken;
+  AuthForGettingAcces(cookie, res);
   const data = DecryptToken(cookie);
+  VerifyUser.Verify(res, data);
   await SessionModel.updateMany({ User_id: data._id }, { $set: { revoked: true } });
   // == go to main landing page ==
 }
 async function ValidateOtp(req, res) {
-  const { email, otp } = req.body;
-  const hahsed_otp = GetHash(otp);
-  const Otp_data = await OtpModel.findOne({ email: email, OTP: hahsed_otp });
-  if (!Otp_data) return ApiResponse.failure(res, "Your data wasnt created !", 500);
-  const ValidatedUser = await usermodel.findByIdAndUpdate(Otp_data.User, {
-    $set: {
-      verified: true,
-    }
-  }, { new: true });
-  if (!ValidatedUser) return ApiResponse.failure(res, "Failed to validate User !", 500);
-  // making refresh token 
-  const key = await Get_Refresh_Token(ValidatedUser);
-  const Hashed_RefToken = GetHash(key);
-  const session_res = await SessionModel.create({
-    User_id: ValidatedUser._id,
-    RefreshHashToken: Hashed_RefToken,
-    revoked: false,
-  });
-  const Access_Token = await Get_Access_token(session_res);
-  SendCookie(res, key);
-  return ApiResponse.success(res, "Successfully Validated User !", 200, { username: ValidatedUser.Name, token: key, Access: Access_Token });
-
+  try {
+    const { email, otp } = req.body;
+    const hahsed_otp = GetHash(otp);
+    const obj = Otp_Helper.Check_OTP(hahsed_otp, email, res);
+    Otp_Helper.CheckExpiry(obj, res);
+    const ValidatedUser = await usermodel.findByIdAndUpdate(obj.User, {
+      $set: {
+        verified: true,
+      }
+    }, { new: true });
+    if (!ValidatedUser) return ApiResponse.failure(res, "Failed to validate User !", 400);
+    // making refresh token 
+    const key = await Get_Refresh_Token(ValidatedUser);
+    const Hashed_RefToken = GetHash(key);
+    const session_res = await SessionModel.create({
+      User_id: ValidatedUser._id,
+      RefreshHashToken: Hashed_RefToken,
+      revoked: false,
+    });
+    const Access_Token = await Get_Access_token(session_res);
+    SendCookie(res, key);
+    Otp_Helper.DeletOtp(obj);
+    return ApiResponse.success(res, "Successfully Validated User !", 200, { username: ValidatedUser.Name, token: key, Access: Access_Token });
+  }
+  catch (error) {
+    console.error("Error :", error);
+    const errmsg = error.message || "Unkown Error Occured !";
+    return ApiResponse.failure(res, errmsg, 500);
+  }
 }
 
 

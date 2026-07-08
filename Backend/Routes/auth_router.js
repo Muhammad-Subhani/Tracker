@@ -7,9 +7,11 @@ const {
   FunctionValidation,
   LogoutOneDevice,
   LogoutAllDevices,
+  ValidateOtp,
 } = require("../Controller/auth_control.js")
 auth_router.post("/SignUP", SignupFunction);
 auth_router.post("/Login", LoginFunction);
+auth_router.post("/otp", ValidateOtp);
 auth_router.get("/GetToken", GetAccessToken);
 auth_router.get("/Validation", FunctionValidation);
 auth_router.get("/LogoutSelf", LogoutOneDevice);
