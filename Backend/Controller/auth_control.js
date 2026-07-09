@@ -19,8 +19,10 @@ const { sendEmail } = require("./transporter.js")
 async function SignupFunction(req, res) {
   try {
     const { username, email, password } = req.body;
-    AuthenticateSignUP.EmptyFields(username, email, password, res);
-    await AuthenticateSignUP.AlreadyExisted(email, res);
+    const fields = AuthenticateSignUP.EmptyFields(username, email, password, res);
+    if (!fields) return;
+    const exists = await AuthenticateSignUP.AlreadyExisted(email, res);
+    if (!exists) return;
     const Hash_Password = GetHash(password);
     const result = await usermodel.create({
       Name: username,
@@ -30,7 +32,7 @@ async function SignupFunction(req, res) {
     });
     // otp part 
     const otp = OTPP();
-    const Hahs_OTP = GetHash(opt);
+    const Hahs_OTP = GetHash(otp);
     const otp_entry = await OtpModel.create({
       User: result._id,
       email: result.email,
@@ -50,8 +52,12 @@ async function SignupFunction(req, res) {
 async function LoginFunction(req, res) {
   try {
     const { email, password } = req.body;
-    AuthenticateLogin.EmptyFields(email, password, res);
-    const entry = AuthenticateLogin.CheckUser(email, res);
+    const fields = AuthenticateLogin.EmptyFields(email, password, res);
+    if (!fields) return;
+    const entry = await AuthenticateLogin.CheckUser(email, password, res);
+    if (!entry) return;
+    const verify = VerifyUser.Verify(res, entry)
+    if (!verify) return
     const key = await Get_Refresh_Token(entry);
     const Hashed_RefToken = GetHash(key);
     const new_session = await SessionModel.create({
@@ -70,9 +76,12 @@ async function LoginFunction(req, res) {
 }
 async function GetAccessToken(req, res) {
   const cookie = AuthForGettingAcces.CheckForCookie(req, res);
-  const sessionObject = AuthForGettingAcces.RevokeCheck(cookie, res);
+  if (!cookie) return;
+  const sessionObject = await AuthForGettingAcces.RevokeCheck(cookie, res);
+  if (!sessionObject) return;
   const userObject = await usermodel.findOne({ _id: sessionObject.User_id });
-  VerifyUser.Verify(res, userObject);
+  const verify = VerifyUser.Verify(res, userObject);
+  if (!verify) return;
   const key = await Get_Refresh_Token(userObject);
   const hash = GetHash(key);
   sessionObject.RefreshHashToken = hash;
@@ -83,34 +92,45 @@ async function GetAccessToken(req, res) {
 }
 async function FunctionValidation(req, res) {
   const token = AuthForEveryAccess.CheckBearer(req, res);
-  const obj = AuthForEveryAccess.RevokeCheck(res, token);
-  VerifyUser.Verify(res, obj);
+  if (!token) return;
+  const obj = await AuthForEveryAccess.RevokeCheck(res, token);
+  if (!obj) return;
+  const verify = VerifyUser.Verify(res, obj);
+  if (!verify) return;
   ApiResponse.success(res, "You Are Authorized !!", { id: obj.User_id })
   // ==able to access any service now ==
 }
 async function LogoutOneDevice(req, res) {
   const cookie = AuthForGettingAcces.CheckForCookie(req, res);
-  const sessionObject = AuthForGettingAcces.RevokeCheck(cookie, res);
+  if (!cookie) return null;
+  const sessionObject = await AuthForGettingAcces.RevokeCheck(cookie, res);
+  if (!sessionObject) return;
   const Data = DecryptToken(cookie);
-  if (Data.verified == false) ApiResponse.failure(res, "You are not authorized !", 500);
+  if (Data.verified == false) return ApiResponse.failure(res, "You are not authorized !", 500);
   sessionObject.revoked = true;
   await sessionObject.save();
+  return ApiResponse.success(res, "Successfully logout from one device", { username: Data.Name }, 200);
   // ==g0 to the main landing page ==
 }
 async function LogoutAllDevices(req, res) {
   const cookie = req.cookies.TempToken;
-  AuthForGettingAcces(cookie, res);
+  const sessionObject = await AuthForGettingAcces.RevokeCheck(cookie, res);
+  if (!sessionObject) return;
   const data = DecryptToken(cookie);
-  VerifyUser.Verify(res, data);
+  const verify = VerifyUser.Verify(res, data);
+  if (!verify) return;
   await SessionModel.updateMany({ User_id: data._id }, { $set: { revoked: true } });
+  ApiResponse.success(res, "Successfully Logout From all devices ", { username: data.Name });
   // == go to main landing page ==
 }
 async function ValidateOtp(req, res) {
   try {
     const { email, otp } = req.body;
     const hahsed_otp = GetHash(otp);
-    const obj = Otp_Helper.Check_OTP(hahsed_otp, email, res);
-    Otp_Helper.CheckExpiry(obj, res);
+    const obj = await Otp_Helper.Check_OTP(hahsed_otp, email, res);
+    if (!obj) return;
+    const check = await Otp_Helper.CheckExpiry(obj, res);
+    if (!check) return;
     const ValidatedUser = await usermodel.findByIdAndUpdate(obj.User, {
       $set: {
         verified: true,
