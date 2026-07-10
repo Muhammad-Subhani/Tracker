@@ -6,7 +6,6 @@ async function Get_Access_token(obj) {
     User_id: obj.User_id,
     Session_id: obj._id,
     RefreshHashToken: obj.RefreshHashToken,
-    revoked: obj.revoked,
   }, JWT_TOKEN, { expiresIn: "15m" });
 }
 

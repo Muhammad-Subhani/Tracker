@@ -23,24 +23,31 @@ async function SignupFunction(req, res) {
     if (!fields) return;
     const exists = await AuthenticateSignUP.AlreadyExisted(email, res);
     if (!exists) return;
+    const ExistingUser = await AuthenticateSignUP.UserNotVerif(res, email);
     const Hash_Password = GetHash(password);
-    const result = await usermodel.create({
-      Name: username,
-      email: email,
-      password: Hash_Password,
-      verified: false,
-    });
+    console.log(`exists is ${exists}`)
+    let result;
+    if (exists != "userexists") {
+      result = await usermodel.create({
+        Name: username,
+        email: email,
+        password: Hash_Password,
+        verified: false,
+      });
+    }
+    const UserID = result ? result._id : ExistingUser._id;
+    const UserEmail = result ? result.email : ExistingUser.email;
     // otp part 
     const otp = OTPP();
     const Hahs_OTP = GetHash(otp);
     const otp_entry = await OtpModel.create({
-      User: result._id,
-      email: result.email,
+      User: UserID,
+      email: UserEmail,
       OTP: Hahs_OTP,
     })
     const Email_html = generateEmailTemplate(otp);
     await sendEmail(email, "OTP Verification", `Your otp is ${otp}`, Email_html);
-    return ApiResponse.success(res, "Successfully Created User Entry GO Validate !", 200, { username: result.Name });
+    return ApiResponse.success(res, "Successfully Created User Entry GO Validate !", 200, { username: result ? result.Name : ExistingUser.Name });
   }
   catch (err) {
     console.error("Error occured ", err)
@@ -87,17 +94,21 @@ async function GetAccessToken(req, res) {
   sessionObject.RefreshHashToken = hash;
   await sessionObject.save();
   const Access_Token = await Get_Access_token(sessionObject);
-  SendCookie(key);
-  return ApiResponse.success(res, "Revived Access Token ", { username: userObject.Name, Token: key, Access: Access_Token })
+  SendCookie(res, key);
+  return ApiResponse.success(res, "Revived Access Token ", 200, { username: userObject.Name, Token: key, Access: Access_Token })
 }
 async function FunctionValidation(req, res) {
   const token = AuthForEveryAccess.CheckBearer(req, res);
   if (!token) return;
+  console.log(`Got the token  : ${token}`)
   const obj = await AuthForEveryAccess.RevokeCheck(res, token);
+  console.log(`Got the object ${obj}`)
   if (!obj) return;
-  const verify = VerifyUser.Verify(res, obj);
+  const UserData = await AuthForEveryAccess.SessionCheck(res, obj);
+  if (!UserData) return;
+  const verify = VerifyUser.Verify(res, UserData);
   if (!verify) return;
-  ApiResponse.success(res, "You Are Authorized !!", { id: obj.User_id })
+  ApiResponse.success(res, "You Are Authorized !!", 200, { Name: UserData.Name },)
   // ==able to access any service now ==
 }
 async function LogoutOneDevice(req, res) {
@@ -109,7 +120,7 @@ async function LogoutOneDevice(req, res) {
   if (Data.verified == false) return ApiResponse.failure(res, "You are not authorized !", 500);
   sessionObject.revoked = true;
   await sessionObject.save();
-  return ApiResponse.success(res, "Successfully logout from one device", { username: Data.Name }, 200);
+  return ApiResponse.success(res, "Successfully logout from one device", 200, { username: Data.Name }, 200);
   // ==g0 to the main landing page ==
 }
 async function LogoutAllDevices(req, res) {
@@ -120,7 +131,7 @@ async function LogoutAllDevices(req, res) {
   const verify = VerifyUser.Verify(res, data);
   if (!verify) return;
   await SessionModel.updateMany({ User_id: data._id }, { $set: { revoked: true } });
-  ApiResponse.success(res, "Successfully Logout From all devices ", { username: data.Name });
+  ApiResponse.success(res, "Successfully Logout From all devices ", 200, { username: data.Name });
   // == go to main landing page ==
 }
 async function ValidateOtp(req, res) {

@@ -26,10 +26,24 @@ class AuthenticateSignUP {
   static async AlreadyExisted(email, res) {
     const entry = await usermodel.findOne({ email: email });
     if (entry) {
-      ApiResponse.failure(res, "User Already Exitss Try Login!", 500);
-      return false
+      if (entry.verified) {
+        ApiResponse.failure(res, "User Already Exitss Try Login!", 500);
+        return false
+      }
+      else if (!entry.verified) return "userexists";
     }
     else return true
+  }
+  static async UserNotVerif(res, email) {
+    const entry = await usermodel.findOne({ email: email });
+    if (entry) {
+      if (entry.verified == false) {
+        await OtpModel.deleteMany({ User: entry._id });
+        ApiResponse.failure(res, "You Are not Verified Sending You OTP !!", 400);
+        return entry;
+      }
+      else return {}
+    }
   }
 }
 class AuthenticateLogin {
@@ -86,27 +100,44 @@ class AuthForGettingAcces {
     else return Particular_Session;
   }
 }
+async function seeRevoke(res, obj) {
+  const sessionObject = await SessionModel.findById(obj.Session_id)
+  if (sessionObject.revoked == true) {
+    ApiResponse.failure(res, "You are Currently Logout !!", 500);
+    return false;
+  }
+  else return true;
+}
+
 class AuthForEveryAccess {
   static CheckBearer(req, res) {
     const token = req.headers['authorization'];
-    if (token) return token = token.split(' ')[1];
+    if (token) {
+      return token.split(' ')[1];
+    }
     else {
       ApiResponse.failure(res, "didnt Get the Bearer Token !", 500);
       return null;
     }
   }
-  static seeRevoke(res, obj) {
-    if (obj.revoked) {
-      ApiResponse.failure(res, "You are Currently Logout !!", 500);
-      return false;
-    }
-    else return true;
-  }
   static async RevokeCheck(res, token) {
     const DecryptedObject = await DecryptToken(token);
     if (DecryptedObject) {
-      seeRevoke(res, DecryptedObject)
-      return DecryptedObject
+      const revokeres = seeRevoke(res, DecryptedObject)
+      if (!revokeres) return null;
+      else return DecryptedObject
+    }
+  }
+
+  static async SessionCheck(res, obj) {
+    const data = await SessionModel.findOne({ _id: obj.Session_id, RefreshHashToken: obj.RefreshHashToken });
+    if (!data) {
+      ApiResponse.failure(res, "Didnt get the matching session id !!");
+      return false;
+    }
+    else {
+      const UserData = await usermodel.findById(data.User_id);
+      return UserData;
     }
   }
 }
