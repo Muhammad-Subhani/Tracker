@@ -100,9 +100,7 @@ async function GetAccessToken(req, res) {
 async function FunctionValidation(req, res) {
   const token = AuthForEveryAccess.CheckBearer(req, res);
   if (!token) return;
-  console.log(`Got the token  : ${token}`)
   const obj = await AuthForEveryAccess.RevokeCheck(res, token);
-  console.log(`Got the object ${obj}`)
   if (!obj) return;
   const UserData = await AuthForEveryAccess.SessionCheck(res, obj);
   if (!UserData) return;
