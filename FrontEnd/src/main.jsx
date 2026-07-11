@@ -1,9 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { DataInput } from './Todo.jsx'
+import { DataInputs } from './newTodo.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <DataInput />
+    <DataInputs />
   </StrictMode>,
-)
+) 

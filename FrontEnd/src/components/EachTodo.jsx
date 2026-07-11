@@ -1,3 +1,4 @@
+import "../styles/Todo.css"
 export const Tasks = function(props) {
   let Status = (props.status) ? "complete" : "";
   return (

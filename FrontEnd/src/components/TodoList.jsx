@@ -1,5 +1,5 @@
 import { Tasks } from "./EachTodo.jsx"
-export const TaskList = function({ Data, SelectionOfFunction }) {
+export const TodoList = function({ Data, SelectionOfFunction }) {
   return (
     <>
       {
