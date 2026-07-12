@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { TrackerSection } from './newTracker.jsx'
+import { TrackerSection } from './Tracker.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

@@ -13,7 +13,7 @@ auth_router.post("/SignUP", SignupFunction);
 auth_router.post("/Login", LoginFunction);
 auth_router.post("/otp", ValidateOtp);
 auth_router.get("/GetToken", GetAccessToken);
-auth_router.get("/Validation", FunctionValidation);
+// auth_router.get("/Validation", FunctionValidation);
 auth_router.get("/LogoutSelf", LogoutOneDevice);
 auth_router.get("/LogoutAll", LogoutAllDevices);
 module.exports = {

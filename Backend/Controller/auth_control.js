@@ -7,7 +7,6 @@ const { GetHash,
   AuthenticateLogin,
   SendCookie,
   AuthForGettingAcces,
-  AuthForEveryAccess,
   OTPP,
   Otp_Helper,
   VerifyUser } = require("../Helper/helperfunctions.js")
@@ -97,18 +96,7 @@ async function GetAccessToken(req, res) {
   SendCookie(res, key);
   return ApiResponse.success(res, "Revived Access Token ", 200, { username: userObject.Name, Token: key, Access: Access_Token })
 }
-async function FunctionValidation(req, res) {
-  const token = AuthForEveryAccess.CheckBearer(req, res);
-  if (!token) return;
-  const obj = await AuthForEveryAccess.RevokeCheck(res, token);
-  if (!obj) return;
-  const UserData = await AuthForEveryAccess.SessionCheck(res, obj);
-  if (!UserData) return;
-  const verify = VerifyUser.Verify(res, UserData);
-  if (!verify) return;
-  ApiResponse.success(res, "You Are Authorized !!", 200, { Name: UserData.Name },)
-  // ==able to access any service now ==
-}
+
 async function LogoutOneDevice(req, res) {
   const cookie = AuthForGettingAcces.CheckForCookie(req, res);
   if (!cookie) return null;
@@ -173,7 +161,6 @@ module.exports = {
   SignupFunction,
   LoginFunction,
   GetAccessToken,
-  FunctionValidation,
   LogoutOneDevice,
   LogoutAllDevices,
   ValidateOtp,
