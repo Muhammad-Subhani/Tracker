@@ -1,9 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { DataInputs } from './newTodo.jsx'
+import { TrackerSection } from './newTracker.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <DataInputs />
+    <TrackerSection />
   </StrictMode>,
 ) 
