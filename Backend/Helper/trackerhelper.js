@@ -20,19 +20,18 @@ class CreatingNewTrackHelper {
     else return content;
   }
 }
-
-class StopCurrentWatchHelper {
-  static CheckParams(req, res) {
-    const trackid = req.params.id;
-    if (!trackid) {
-      ApiResponse.failure(res, "There is no Track ID in the params ", 400);
-      return null;
-    }
-    else return trackid;
+function CheckParams(req, res) {
+  const trackid = req.params.id;
+  if (!trackid) {
+    ApiResponse.failure(res, "There is no Track ID in the params ", 400);
+    return null;
   }
+  else return trackid;
 }
+
+
 module.exports = {
   CreatingNewTrackHelper,
-  StopCurrentWatchHelper,
+  CheckParams,
   Checkuser,
 }
