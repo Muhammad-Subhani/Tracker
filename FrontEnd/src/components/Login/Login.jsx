@@ -1,12 +1,11 @@
 import { useState } from "react"
-import { SignUpUser } from "../../services/signupApi"
-export const SignupForm = function() {
+import { LoginUser } from "../../services/loginApi.js"
+export const LoginForm = function() {
   const [email, setEmail] = useState("");
-  const [username, setUserame] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("")
-  async function HandleSignUP() {
-    const { ok, data } = await SignUpUser(username, email, password);
+  async function HandleLogin() {
+    const { ok, data } = await LoginUser(email, password);
     if (!ok) {
       setError(data.message || "ِinvalid error")
       return;
@@ -15,13 +14,7 @@ export const SignupForm = function() {
   }
   return (
     <>
-      <h1>This is SignUP Form </h1>
-      <label>Username</label>
-      <input type="text"
-        value={username}
-        placeholder="enter username "
-        onChange={((e) => setUserame(e.target.value))}
-      />
+      <h1>This is Login Form </h1>
       <label>Email</label>
       <input type="text"
         value={email}
@@ -34,7 +27,7 @@ export const SignupForm = function() {
         placeholder="enter username "
         onChange={((e) => setPassword(e.target.value))}
       />
-      <button onClick={HandleSignUP}>Signup </button>
+      <button onClick={HandleLogin}>Login </button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </>
   )
