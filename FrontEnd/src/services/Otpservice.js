@@ -8,4 +8,4 @@ export async function OtpValidation(email, otp) {
   });
   const data = await response.json();
   return { ok: response.ok, data: data };
-} 
+}  

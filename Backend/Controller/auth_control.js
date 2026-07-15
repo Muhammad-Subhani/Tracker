@@ -73,7 +73,10 @@ async function LoginFunction(req, res) {
     });
     const Access_Token = await Get_Access_token(new_session);
     SendCookie(res, key);
-    return ApiResponse.success(res, "Successfully Logged IN !", 200, { username: entry.Name, Token: key, Access: Access_Token })
+    return ApiResponse.success(res, "Successfully Logged IN !", 200, {
+      username: entry.Name,
+      Token: key, Access: Access_Token
+    })
   } catch (error) {
     console.error("Error :", error);
     const errmsg = error.message || "Unkown Error Occured !";
@@ -94,7 +97,10 @@ async function GetAccessToken(req, res) {
   await sessionObject.save();
   const Access_Token = await Get_Access_token(sessionObject);
   SendCookie(res, key);
-  return ApiResponse.success(res, "Revived Access Token ", 200, { username: userObject.Name, Token: key, Access: Access_Token })
+  return ApiResponse.success(res, "Revived Access Token ", 200, {
+    username: userObject.Name,
+    Token: key, Access: Access_Token
+  })
 }
 
 async function LogoutOneDevice(req, res) {
@@ -145,7 +151,8 @@ async function ValidateOtp(req, res) {
     const Access_Token = await Get_Access_token(session_res);
     SendCookie(res, key);
     Otp_Helper.DeletOtp(obj);
-    return ApiResponse.success(res, "Successfully Validated User !", 200, { username: ValidatedUser.Name, token: key, Access: Access_Token });
+    return ApiResponse.success(res, "Successfully Validated User !", 200,
+      { username: ValidatedUser.Name, Token: key, Access: Access_Token });
   }
   catch (error) {
     console.error("Error :", error);
