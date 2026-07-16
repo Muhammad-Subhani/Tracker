@@ -18,7 +18,7 @@ class ApiResponse {
 class AuthenticateSignUP {
   static EmptyFields(username, email, password, res) {
     if (!username || !email || !password) {
-      ApiResponse.failure(res, "there is some missing fild !", 500);
+      ApiResponse.failure(res, "there is some missing fild !", 400);
       return false
     }
     else return true;
@@ -27,7 +27,7 @@ class AuthenticateSignUP {
     const entry = await usermodel.findOne({ email: email });
     if (entry) {
       if (entry.verified) {
-        ApiResponse.failure(res, "User Already Exitss Try Login!", 500);
+        ApiResponse.failure(res, "User Already Exitss Try Login!", 409);
         return false
       }
       else if (!entry.verified) return "userexists";
@@ -39,7 +39,7 @@ class AuthenticateSignUP {
     if (entry) {
       if (entry.verified == false) {
         await OtpModel.deleteMany({ User: entry._id });
-        ApiResponse.failure(res, "You Are not Verified Sending You OTP !!", 400);
+        ApiResponse.failure(res, "You Are not Verified Sending You OTP !!", 409);
         return entry;
       }
       else return {}
@@ -49,7 +49,7 @@ class AuthenticateSignUP {
 class AuthenticateLogin {
   static EmptyFields(email, password, res) {
     if (!email || !password) {
-      ApiResponse.failure(res, "missing field !", 500);
+      ApiResponse.failure(res, "missing field !", 400);
       return false;
     }
     else return true;
@@ -57,7 +57,7 @@ class AuthenticateLogin {
   static async CheckUser(email, password, res) {
     const entry = await usermodel.findOne({ email: email, password: GetHash(password) });
     if (!entry) {
-      ApiResponse.failure(res, "There is no such user try signUp !", 500);
+      ApiResponse.failure(res, "There is no such user try signUp !", 401);
       return null;
     }
     else
@@ -67,7 +67,7 @@ class AuthenticateLogin {
 class VerifyUser {
   static Verify(res, obj) {
     if (!obj.verified) {
-      ApiResponse.failure(res, "User NOt Verified !", 400);
+      ApiResponse.failure(res, "User NOt Verified !", 403);
       return false;
     }
     else return true;
@@ -85,7 +85,7 @@ class AuthForGettingAcces {
   static CheckForCookie(req, res) {
     const cookie = req.cookies.TempToken;
     if (!cookie) {
-      ApiResponse.failure(res, "Didnt get the Token !", 500);
+      ApiResponse.failure(res, "Didnt get the Token !", 401);
       return null;
     }
     else return cookie;
@@ -94,7 +94,7 @@ class AuthForGettingAcces {
     const Hash = GetHash(cookie);
     const Particular_Session = await SessionModel.findOne({ RefreshHashToken: Hash, revoked: false })
     if (!Particular_Session) {
-      ApiResponse.failure(res, "The Session is Revoked !!", 500);
+      ApiResponse.failure(res, "The Session is Revoked !!", 401);
       return null;
     }
     else return Particular_Session;
@@ -103,7 +103,7 @@ class AuthForGettingAcces {
 async function seeRevoke(res, obj) {
   const sessionObject = await SessionModel.findById(obj.Session_id)
   if (sessionObject.revoked == true) {
-    ApiResponse.failure(res, "You are Currently Logout !!", 500);
+    ApiResponse.failure(res, "You are Currently Logout !!", 401);
     return false;
   }
   else return true;
@@ -116,7 +116,7 @@ class AuthForEveryAccess {
       return token.split(' ')[1];
     }
     else {
-      ApiResponse.failure(res, "didnt Get the Bearer Token !", 500);
+      ApiResponse.failure(res, "didnt Get the Bearer Token !", 401);
       return null;
     }
   }
@@ -132,7 +132,7 @@ class AuthForEveryAccess {
   static async SessionCheck(res, obj) {
     const data = await SessionModel.findOne({ _id: obj.Session_id, RefreshHashToken: obj.RefreshHashToken });
     if (!data) {
-      ApiResponse.failure(res, "Didnt get the matching session id !!");
+      ApiResponse.failure(res, "Didnt get the matching session id !!", 401);
       return false;
     }
     else {
@@ -159,7 +159,7 @@ class Otp_Helper {
     const period = (time_now - TimeAtCreated) / 1000 / 60;
     if (period > 5) {
       await OtpModel.deleteOne({ _id: obj._id });
-      ApiResponse.failure(res, "The Otp is expired !", 400);
+      ApiResponse.failure(res, "The Otp is Expired !", 400);
       return false;
     }
     else return true;

@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { SignUpUser } from "../../services/signupApi"
+import { useNavigate } from "react-router-dom"
 export const SignupForm = function() {
+  const navigate = useNavigate()
   const [email, setEmail] = useState("");
   const [username, setUserame] = useState("");
   const [password, setPassword] = useState("");
@@ -11,7 +13,7 @@ export const SignupForm = function() {
       setError(data.message || "ِinvalid error")
       return;
     }
-    console.log(`data : ${data}`);
+    navigate("/Auth/otp", { state: { email } })
   }
   return (
     <>

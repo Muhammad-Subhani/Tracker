@@ -1,15 +1,24 @@
 import { useState } from "react";
 import { OtpValidation } from "../../services/Otpservice.js";
-
-export const OtpForm = ({ email }) => {
+import { useLocation, useNavigate } from "react-router-dom"
+import { AuthContext } from "../../context/AuthContext.js"
+import { useContext } from "react";
+export const OtpForm = () => {
+  const navigate = useNavigate();
+  const { setAccessToken } = useContext(AuthContext)
+  const location = useLocation();
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
-
+  const email = location.state?.email;
   async function handleValidate() {
     const { ok, data } = await OtpValidation(email, otp);
     if (!ok) {
       setError(data.message || "Invalid OTP");
       return;
+    }
+    else {
+      setAccessToken(data.Access);
+      navigate("/");
     }
     console.log("Access token received:", data.Access);
     // next step: this is where we'll store data.Access in AuthContext
