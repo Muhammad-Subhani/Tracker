@@ -1,20 +1,10 @@
 import { useState } from "react"
-import { SignUpUser } from "../../services/signupApi"
-import { useNavigate } from "react-router-dom"
+import { SignupHelpers } from "../../services/signupApi.jsx";
 export const SignupForm = function() {
-  const navigate = useNavigate()
   const [email, setEmail] = useState("");
   const [username, setUserame] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("")
-  async function HandleSignUP() {
-    const { ok, data } = await SignUpUser(username, email, password);
-    if (!ok) {
-      setError(data.message || "ِinvalid error")
-      return;
-    }
-    navigate("/Auth/otp", { state: { email } })
-  }
+  const { HandleButtonClick } = SignupHelpers()
   return (
     <>
       <h1>This is SignUP Form </h1>
@@ -36,8 +26,7 @@ export const SignupForm = function() {
         placeholder="enter username "
         onChange={((e) => setPassword(e.target.value))}
       />
-      <button onClick={HandleSignUP}>Signup </button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      <button onClick={() => HandleButtonClick(username, email, password)}>Signup </button>
     </>
   )
 }

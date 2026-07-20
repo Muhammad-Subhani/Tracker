@@ -1,17 +1,9 @@
 import { useState } from "react"
-import { LoginUser } from "../../services/loginApi.js"
+import { LoginHelper } from "../../services/LoginApi.jsx";
 export const LoginForm = function() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("")
-  async function HandleLogin() {
-    const { ok, data } = await LoginUser(email, password);
-    if (!ok) {
-      setError(data.message || "ِinvalid error")
-      return;
-    }
-    console.log(`data : ${data}`);
-  }
+  const { HandleButtonClick } = LoginHelper()
   return (
     <>
       <h1>This is Login Form </h1>
@@ -27,8 +19,7 @@ export const LoginForm = function() {
         placeholder="enter username "
         onChange={((e) => setPassword(e.target.value))}
       />
-      <button onClick={HandleLogin}>Login </button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      <button onClick={() => HandleButtonClick(email, password)}>Login </button>
     </>
   )
 }

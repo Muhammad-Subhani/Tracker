@@ -1,29 +1,11 @@
 import { useState } from "react";
-import { OtpValidation } from "../../services/Otpservice.js";
-import { useLocation, useNavigate } from "react-router-dom"
-import { AuthContext } from "../../context/AuthContext.js"
-import { useContext } from "react";
+import { useLocation } from "react-router-dom"
+import { OtpHelper } from "../../services/OtpApi.jsx";
 export const OtpForm = () => {
-  const navigate = useNavigate();
-  const { setAccessToken } = useContext(AuthContext)
   const location = useLocation();
   const [otp, setOtp] = useState("");
-  const [error, setError] = useState("");
   const email = location.state?.email;
-  async function handleValidate() {
-    const { ok, data } = await OtpValidation(email, otp);
-    if (!ok) {
-      setError(data.message || "Invalid OTP");
-      return;
-    }
-    else {
-      setAccessToken(data.Access);
-      navigate("/");
-    }
-    console.log("Access token received:", data.Access);
-    // next step: this is where we'll store data.Access in AuthContext
-  }
-
+  const { HandleButtonClick } = OtpHelper()
   return (
     <>
       <h1>Enter OTP sent to {email}</h1>
@@ -33,8 +15,7 @@ export const OtpForm = () => {
         placeholder="Enter OTP"
         onChange={(e) => setOtp(e.target.value)}
       />
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <button onClick={handleValidate}>Verify</button>
+      <button onClick={() => HandleButtonClick(email, otp)}>Verify</button>
     </>
   );
 };
