@@ -4,6 +4,7 @@ export const LoginForm = function() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { HandleButtonClick } = LoginHelper()
+  // there is use of location in Private Routes make sure you use that 
   return (
     <>
       <h1>This is Login Form </h1>

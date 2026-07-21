@@ -31,6 +31,7 @@ export const AxiosInterceptor = () => {
       }
 
     );
+    // essential to remove them every time other wise they would pile up 
     return () => {
       axiosPrivate.interceptors.request.eject(reqInterceptor);
       axiosPrivate.interceptors.response.eject(responseIntercept);

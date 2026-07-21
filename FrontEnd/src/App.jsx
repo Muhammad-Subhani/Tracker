@@ -2,19 +2,21 @@ import { Routes, Route } from "react-router-dom"
 import { OtpForm } from "./components/Otp/Otp.jsx"
 import { SignupForm } from "./components/SignUp/SignUp.jsx"
 import { LoginForm } from "./components/Login/Login.jsx"
-import { PrivateRoutes } from "./components/privateRoutes.jsx"
+import { PersistentLogin } from "./services/PersistentLogin.jsx"
+import { PrivateRoutes } from "./services/PrivateRoute.jsx"
 import { MainPage } from "./dashboard.jsx"
 export const App = function() {
   return (
-    <Routes >
-      <Route path="/Auth/SignUP" element={<SignupForm />} />
-      <Route path="/Auth/otp" element={<OtpForm />} />
+    <Routes>
       <Route path="/Auth/Login" element={<LoginForm />} />
-      <PrivateRoutes>
-        <Route path="/" element={<MainPage />} />
-      </PrivateRoutes>
-    </Routes>
-  )
+      <Route path="/Auth/SignUP" element={<SignupForm />} />
+      <Route path="/Auth/otp" element={< OtpForm />} />
+      <Route element={<PersistentLogin />}>
+        <Route element={<PrivateRoutes />}>
+          <Route path="/" element={<MainPage />} />
+        </Route>
+      </Route>
+    </Routes>)
 }
 // the motive of App.jsx is just to handle routes whatever file you make the only way to render them is
 // to place them in this . one more things this is not the main page the page that will hold your tracker and 
