@@ -11,8 +11,9 @@ export const useRefreshToken = () => {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
-    setAccessToken(response.data.Access);
-    return response.data.Access;
+    setAccessToken(response?.data?.data?.Access);
+    console.log(`reterning ${response?.data?.data?.Access}`)
+    return response?.data?.data?.Access;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return {

@@ -4,11 +4,12 @@ import { useContext } from "react";
 
 export const PrivateRoutes = () => {
   const { accessToken } = useContext(AuthContext);
+  console.log(`at PrivateRoutes ${accessToken}`)
   const location = useLocation();
   return accessToken ? (
     <Outlet />
   )
     : (
-      <Navigate to={"/Auth?Login"} state={{ from: location }} replace />
+      <Navigate to={"/Auth/Login"} state={{ from: location }} replace />
     )
 }

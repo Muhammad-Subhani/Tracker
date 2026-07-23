@@ -18,7 +18,7 @@ export const OtpHelper = function() {
           withCredentials: true
         })
       if (response?.status == 200 || response?.status == 201) {
-        setAccessToken(response.data.Access);
+        setAccessToken(response?.data?.data?.Access);
         setLoading(false)
         Navigate("/");
       }

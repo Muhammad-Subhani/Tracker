@@ -1,10 +1,12 @@
 import { useState } from "react"
 import { LoginHelper } from "../../services/LoginApi.jsx";
+import { useNavigate } from "react-router-dom";
 export const LoginForm = function() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { HandleButtonClick } = LoginHelper()
   // there is use of location in Private Routes make sure you use that 
+  const navigate = useNavigate();
   return (
     <>
       <h1>This is Login Form </h1>
@@ -21,6 +23,8 @@ export const LoginForm = function() {
         onChange={((e) => setPassword(e.target.value))}
       />
       <button onClick={() => HandleButtonClick(email, password)}>Login </button>
+      <p onClick={() => navigate("/Auth/SignUP")}>New User Try Signup !!</p>
+
     </>
   )
 }

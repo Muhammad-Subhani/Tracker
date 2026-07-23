@@ -1,7 +1,8 @@
 import { AuthContext } from "../context/AuthContext";
 import { useContext, useEffect } from "react";
 import { useRefreshToken } from "../hooks/userefreshToken";
-export const PersistentLogin = function({ children }) {
+import { Outlet } from "react-router-dom";
+export const PersistentLogin = function() {
 
   const {
     accessToken,
@@ -23,6 +24,7 @@ export const PersistentLogin = function({ children }) {
         setAccessToken(newaccesstoken);
       } catch (err) {
         console.error("An error occured !", err);
+        setLoading(false);
       }
       finally {
         isMounted && setLoading(false);
@@ -30,6 +32,8 @@ export const PersistentLogin = function({ children }) {
     }
     if (!accessToken) verifyRefToken();
     else setLoading(false);
+
+    console.log(accessToken)
 
     // runs by the react itself in the end so you dont need to set it false manually 
     return () => isMounted = false;
@@ -41,5 +45,5 @@ export const PersistentLogin = function({ children }) {
       Loading ......
     </div>
   )
-  return children
+  return <Outlet />
 }

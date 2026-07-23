@@ -2,13 +2,19 @@ const express = require("express");
 const { PORT, DATABASE_KEY } = require("./server.js")
 const { ConnectToDatabase } = require("./Connections/connect.js")
 const morgan = require("morgan");
+const cors = require("cors");
 const cookieParser = require("cookie-parser")
 const { auth_router } = require("./Routes/auth_router.js");
 const { Tracker_Router } = require("./Routes/Tracker_routes.js")
 const { transporter } = require("./Controller/transporter.js")
 const app = express();
+const corsOtpion = {
+  origin: "http://localhost:5173",
+  credentials: true
+}
 //middlewares
 app.use(cookieParser());
+app.use(cors(corsOtpion));
 app.use(express.json());
 app.use(express.urlencoded({ extends: true }))
 app.use(morgan("dev"));
