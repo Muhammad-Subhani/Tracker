@@ -7,8 +7,8 @@ export const PersistentLogin = function() {
   const {
     accessToken,
     setAccessToken,
-    Loading,
-    setLoading
+    loading,
+    setLoading,
   } = useContext(AuthContext);
   const { refresh } = useRefreshToken();
 
@@ -33,14 +33,13 @@ export const PersistentLogin = function() {
     if (!accessToken) verifyRefToken();
     else setLoading(false);
 
-    console.log(accessToken)
 
     // runs by the react itself in the end so you dont need to set it false manually 
     return () => isMounted = false;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (Loading) return (
+  if (loading) return (
     <div>
       Loading ......
     </div>

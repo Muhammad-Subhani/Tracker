@@ -1,0 +1,42 @@
+.slidebar {
+  height: 100vh;
+  background-color: gray;
+  border: 1px solid darkslategrey;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  /* important — hides text as width shrinks */
+}
+
+.slidebar.open {
+  width: 220px;
+}
+
+.slidebar.closed {
+  width: 60px;
+  /* enough for just icons */
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  padding: 12px;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.slidebar-links {
+  display: flex;
+  flex-direction: column;
+}
+
+.slidebar-links a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 16px;
+  white-space: nowrap;
+  /* prevents text wrapping while shrinking */
+}

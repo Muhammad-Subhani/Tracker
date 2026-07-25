@@ -4,7 +4,6 @@ import { useContext } from "react";
 
 export const PrivateRoutes = () => {
   const { accessToken } = useContext(AuthContext);
-  console.log(`at PrivateRoutes ${accessToken}`)
   const location = useLocation();
   return accessToken ? (
     <Outlet />

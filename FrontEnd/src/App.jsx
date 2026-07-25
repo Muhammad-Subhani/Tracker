@@ -4,7 +4,7 @@ import { SignupForm } from "./components/SignUp/SignUp.jsx"
 import { LoginForm } from "./components/Login/Login.jsx"
 import { PersistentLogin } from "./services/PersistentLogin.jsx"
 import { PrivateRoutes } from "./services/PrivateRoute.jsx"
-import { MainPage } from "./dashboard.jsx"
+import { Dashboard } from "./dashboard.jsx"
 export const App = function() {
   return (
     <Routes>
@@ -13,7 +13,7 @@ export const App = function() {
       <Route path="/Auth/otp" element={< OtpForm />} />
       <Route element={<PersistentLogin />}>
         <Route element={<PrivateRoutes />}>
-          <Route path="/" element={<MainPage />} />
+          <Route path="/" element={<Dashboard />} />
         </Route>
       </Route>
     </Routes>)
