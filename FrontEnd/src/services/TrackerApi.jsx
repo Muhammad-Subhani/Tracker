@@ -1,5 +1,6 @@
 import { axiosPrivate } from "./useAxiosPrivate.jsx"
 const API_ENDPOINT = "/api/createTrack";
+const ENDPOINT_CANCEL = "/api/updateTrack";
 export const TrackerApi = function() {
   async function HandleButtonClick(content) {
     try {
@@ -7,12 +8,23 @@ export const TrackerApi = function() {
         , { content: content })
       return response;
     } catch (err) {
-      if (!err?.response) console.log("NO response from the backend ");
+      if (!err?.response) console.log("no response from the backend ");
       else if (err?.response.status === 401 || err?.response?.status === 400) console.log("unauthorized ")
-      else console.error("Error Occured :", err);
+      else console.error("error occured :", err);
+    }
+  }
+  async function HandleHaStop(ID) {
+    try {
+      const response = await axiosPrivate.patch(`${ENDPOINT_CANCEL}/${ID}`, {});
+      return response.data;
+    } catch (err) {
+      if (!err?.response) console.log("no response from the backend ");
+      else if (err?.response.status === 401 || err?.response?.status === 400) console.log("unauthorized ")
+      else console.error("error occured :", err);
     }
   }
   return {
     HandleButtonClick,
+    HandleHaStop,
   }
 }

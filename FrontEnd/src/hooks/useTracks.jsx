@@ -1,35 +1,56 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
+import { TrackerApi } from "../services/TrackerApi";
 export const useTracks = function() {
-  const IdCount = useRef(0);
+  const {
+    HandleButtonClick,
+    HandleHaStop } = TrackerApi()
   const Timings = useRef({});
   const [TrackerData, setTrackerData] = useState([]);
   const [tracks, setTracks] = useState("");
-  function AddTheTracks() {
-    let my_id = `track_${IdCount.current}`
-    IdCount.current += 1;
-    setTrackerData((prev) => [...prev, { content: `${tracks}`, id: my_id, HasStop: false, count: 0 }]);
-    StartWatch(my_id);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  async function AddTheTracks() {
+    const response = await HandleButtonClick(tracks);
+    const TrackFromDB = response?.data?.tracks;
+    setTrackerData(TrackFromDB);
+    // the following code will run a separate useEffect for every piece 
+    {
+      TrackerData.map(track => (
+        <StopWatchDisplay key={track._id} TrackFromDB={track} />
+      ))
+    }
   }
   function HandleClearTracks(ID) {
-    setTrackerData((prev) => prev.filter(p => p.id != ID))
+    setTrackerData((prev) => prev.filter(p => p._id != ID))
   }
-  function SelectionOfTrackFunction(id, ID) {
+  async function SelectionOfTrackFunction(id, ID) {
     if (id == 1) HandleClearTracks(ID)
-    else StopWatch(ID)
+    // else do the cancel button api here !!
+    else {
+      const modified = await HandleHaStop(ID);
+      // actually had to change the specific entry of the data 
+      const modifiedSet = TrackerData.push(modified);
+      setTrackerData(modifiedSet);
+    }
+    // append in the tracker data 
+
   }
   function ClearAllTracks() {
     const data = TrackerData.filter(p => p.HasStop == false)
     setTrackerData(data)
   }
-  function StartWatch(ID) {
-    Timings.current[ID] = setInterval(() => {
-      setTrackerData((Prev) => Prev.map(p => (p.id == ID) ? { ...p, count: p.count + 1 } : p))
-    }, 1000)
+  function StopWatchDisplay({ TrackFromDB }) {
+    useEffect(() => {
+      if (!TrackFromDB || TrackFromDB.HasStop) return; // if there is no entry or the HasStop is true 
+      const startTime = new Date(TrackFromDB.StartTime).getTime(); // get the time when a new entry is created 
+      const tick = () => setElapsedTime(Date.now() - startTime);
+      tick();
+      const interval = setInterval(tick, 1000); // tich function will repeat every second 
+
+      return () => clearInterval(interval); // as soon the TrackFromDB changes the interval clears 
+
+    }, [TrackFromDB])
   }
-  function StopWatch(ID) {
-    clearInterval(Timings.current[ID]);
-    setTrackerData(prev => prev.map(p => (p.id == ID) ? { ...p, HasStop: true } : p));
-  }
+
   function RenderTime(secs) {
     let hrs = Math.floor(secs / 3600);
     let mins = (Math.floor(secs / 60)) % 60;
@@ -42,11 +63,13 @@ export const useTracks = function() {
     setTrackerData,
     tracks,
     setTracks,
+    StopWatchDisplay,
     AddTheTracks,
     HandleClearTracks,
     SelectionOfTrackFunction,
     ClearAllTracks,
-    StopWatch,
+    elapsedTime,
+    setElapsedTime,
     RenderTime
   }
 }
