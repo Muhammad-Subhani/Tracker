@@ -78,7 +78,7 @@ async function DeleteAllUserTrack(req, res) {
   try {
     const reqUser = CheckUser(req, res);
     if (!reqUser) return;
-    const deletestatus = await trackmodel.deleteMany({ User_id: reqUser._id });
+    const deletestatus = await trackmodel.deleteMany({ User_id: reqUser._id, HasStop: true });
     if (!deletestatus.deletedCount == 0) return ApiResponse.failure(res, "No Deletion !", 500);
     return ApiResponse.success(res, "Successfullly deleted all the data !", 200, { numDeleted: deletestatus })
   } catch (error) {

@@ -1,10 +1,12 @@
-import { useState, useRef, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { TrackerApi } from "../services/TrackerApi";
 export const useTracks = function() {
   const {
     HandleButtonClick,
-    HandleHaStop } = TrackerApi()
-  const Timings = useRef({});
+    HandleHaStop,
+    DeleteParticular,
+    DeleteAll
+  } = TrackerApi()
   const [TrackerData, setTrackerData] = useState([]);
   const [tracks, setTracks] = useState("");
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -19,7 +21,8 @@ export const useTracks = function() {
       ))
     }
   }
-  function HandleClearTracks(ID) {
+  async function HandleClearTracks(ID) {
+    await DeleteParticular(ID);
     setTrackerData((prev) => prev.filter(p => p._id != ID))
   }
   async function SelectionOfTrackFunction(id, ID) {
@@ -27,14 +30,12 @@ export const useTracks = function() {
     // else do the cancel button api here !!
     else {
       const modified = await HandleHaStop(ID);
-      // actually had to change the specific entry of the data 
-      const modifiedSet = TrackerData.push(modified);
-      setTrackerData(modifiedSet);
+      setTrackerData((prev) => prev.map((obj) => (obj._id == ID) ? { ...obj, modified } : obj));
     }
-    // append in the tracker data 
 
   }
   function ClearAllTracks() {
+    DeleteAll()
     const data = TrackerData.filter(p => p.HasStop == false)
     setTrackerData(data)
   }
@@ -58,7 +59,6 @@ export const useTracks = function() {
     return `${hrs}hrs ${mins}mins ${sec} secs`;
   }
   return {
-    Timings,
     TrackerData,
     setTrackerData,
     tracks,

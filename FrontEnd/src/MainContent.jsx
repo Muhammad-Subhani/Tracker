@@ -1,9 +1,9 @@
 import "./styles/mainpage.css"
-import { DataInputs } from "./Todo.jsx"
+import { TrackerSection } from "./Tracker.jsx"
 export const MainPage = function() {
   return (
     <div className="mainpage">
-      <DataInputs />
+      <TrackerSection />
     </div>
   )
 }

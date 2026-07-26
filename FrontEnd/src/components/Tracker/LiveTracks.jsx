@@ -5,7 +5,7 @@ export const LiveTracks = function({ TrackerData, SelectionOfTrackFunction }) {
       {
         TrackerData.map((p) => {
           if (p.content != "" && p.HasStop == false) {
-            return <Tracks content={p.content} Id={p.id} NeededTrackFunc={SelectionOfTrackFunction} time={p.count} status={p.HasStop} />
+            return <Tracks content={p.content} Id={p.id} NeededTrackFunc={SelectionOfTrackFunction} status={p.HasStop} />
           }
         })
       }
