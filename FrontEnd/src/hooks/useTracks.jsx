@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react"
-import { TrackerApi } from "../services/TrackerApi";
+import { useTrackerApi } from "../services/TrackerApi";
 export const useTracks = function() {
   const {
     HandleButtonClick,
     HandleHaStop,
     DeleteParticular,
     DeleteAll
-  } = TrackerApi()
+  } = useTrackerApi()
   const [TrackerData, setTrackerData] = useState([]);
   const [tracks, setTracks] = useState("");
   const [elapsedTime, setElapsedTime] = useState(0);

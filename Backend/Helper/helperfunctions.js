@@ -92,6 +92,7 @@ class AuthForGettingAcces {
   }
   static async RevokeCheck(cookie, res) {
     const Hash = GetHash(cookie);
+    console.log(Hash)
     const Particular_Session = await SessionModel.findOne({ RefreshHashToken: Hash, revoked: false })
     if (!Particular_Session) {
       ApiResponse.failure(res, "The Session is Revoked !!", 401);
@@ -111,7 +112,9 @@ async function seeRevoke(res, obj) {
 
 class AuthForEveryAccess {
   static CheckBearer(req, res) {
+    console.log(req.headers)
     const token = req.headers['authorization'];
+    console.log(`Token is ${token}`)
     if (token) {
       return token.split(' ')[1];
     }

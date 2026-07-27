@@ -3,14 +3,14 @@ const { ApiResponse } = require("../Helper/helperfunctions.js")
 const {
   CreatingNewTrackHelper,
   CheckParams,
-  CheckUser,
+  Checkuser,
 } = require("../Helper/trackerhelper.js")
 
 async function CreateNewTrack(req, res) {
   try {
     const content = CreatingNewTrackHelper.CheckContent(req, res);
     if (!content) return;
-    const reqUser = CheckUser(req, res);
+    const reqUser = Checkuser(req, res);
     if (!reqUser) return
     const userTrack = await trackmodel.create({
       User_id: reqUser._id,
@@ -30,7 +30,7 @@ async function StopCurrentWatch(req, res) {
   try {
     const trackid = CheckParams(req, res);
     if (!trackid) return;
-    const reqUser = CheckUser(req, res);
+    const reqUser = Checkuser(req, res);
     if (!reqUser) return;
     const modifiredTrack = await trackmodel.findOneAndUpdate({ _id: trackid, User_id: reqUser._id },
       { HasStop: true, EndTime: Date.now() },
@@ -46,11 +46,11 @@ async function StopCurrentWatch(req, res) {
 
 async function GetAllUserData(req, res) {
   try {
-    const reqUser = CheckUser(req, res);
+    const reqUser = Checkuser(req, res);
     if (!reqUser) return;
     const allTracks = await trackmodel.find(reqUser._id);
     // ive sent success because this will be shown on the default screen so if no track gracefully success method and empty {}
-    if (allTracks.length == 0) return ApiResponse.success(res, "no tracks yet!", 200, { alltracks: {} });
+    if (allTracks.length == 0) return ApiResponse.success(res, "no tracks yet!", 200, { alltracks: [] });
     return ApiResponse.success(res, "Here is list of all tracks !", 200, { alltracks: allTracks })
   } catch (error) {
     console.error("Error Ocurred !!", error);
@@ -60,7 +60,7 @@ async function GetAllUserData(req, res) {
 }
 async function DeleteParticularTrack(req, res) {
   try {
-    const reqUser = CheckUser(req, res);
+    const reqUser = Checkuser(req, res);
     if (!reqUser) return;
     const trackid = CheckParams(req, res);
     if (!trackid) return;
@@ -76,7 +76,7 @@ async function DeleteParticularTrack(req, res) {
 
 async function DeleteAllUserTrack(req, res) {
   try {
-    const reqUser = CheckUser(req, res);
+    const reqUser = Checkuser(req, res);
     if (!reqUser) return;
     const deletestatus = await trackmodel.deleteMany({ User_id: reqUser._id, HasStop: true });
     if (!deletestatus.deletedCount == 0) return ApiResponse.failure(res, "No Deletion !", 500);

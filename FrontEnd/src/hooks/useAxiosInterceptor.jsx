@@ -10,7 +10,7 @@ export const AxiosInterceptor = () => {
     const reqInterceptor = axiosPrivate.interceptors.request.use(
       (config) => {
         if (!config.headers["Authorization"]) {
-          config.headers["Authorization"] = `Bearer ${AuthContext?.accessToken}`
+          config.headers["Authorization"] = `Bearer ${accessToken}`
         }
         return config;
       },

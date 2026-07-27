@@ -1,11 +1,11 @@
-import { axiosPrivate } from "./useAxiosPrivate.jsx"
 const API_ENDPOINT = "/api/createTrack";
 const ENDPOINT_STOPWATCH = "/api/updateTrack";
 const ENDPOINT_FETCHDATA = "/api/getTracks";
 const ENDPOINT_DELETEONE = "/api/deleteParticular";
 const ENDPOINT_DELETEALL = "/api/deleteAll";
-export const TrackerApi = function() {
-
+import { AxiosInterceptor } from "../hooks/useAxiosInterceptor.jsx";
+export const useTrackerApi = function() {
+  const axiosPrivate = AxiosInterceptor();
   async function HandleButtonClick(content) {
     try {
       const response = await axiosPrivate.post(API_ENDPOINT
