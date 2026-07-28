@@ -1,11 +1,17 @@
+// requirements 
 import { axiosPrivate } from "../services/useAxiosPrivate";
 import { useRefreshToken } from "./userefreshToken";
 import { AuthContext } from "../context/AuthContext";
 import { useContext, useEffect } from "react";
-export const AxiosInterceptor = () => {
+
+// interceptor 
+export const useAxiosInterceptor = () => {
+
   const { refresh } = useRefreshToken()
   const { accessToken } = useContext(AuthContext);
+
   useEffect(() => {
+
     // this interceptor would attach a accessToken to every ongoing req 
     const reqInterceptor = axiosPrivate.interceptors.request.use(
       (config) => {
@@ -16,6 +22,7 @@ export const AxiosInterceptor = () => {
       },
       (err) => Promise.reject(err)
     );
+
     // now this will be the response interceptors 
     const responseIntercept = axiosPrivate.interceptors.response.use(
       (response) => response,
@@ -31,11 +38,14 @@ export const AxiosInterceptor = () => {
       }
 
     );
+
     // essential to remove them every time other wise they would pile up 
     return () => {
       axiosPrivate.interceptors.request.eject(reqInterceptor);
       axiosPrivate.interceptors.response.eject(responseIntercept);
     };
   }, [accessToken, refresh])
+
+  // in the last returning the axios instance 
   return axiosPrivate
 }

@@ -1,4 +1,7 @@
 export const TrackInput = function({ tracks, setTracks, AddTheTracks }) {
+  async function AddTracksButton() {
+    await AddTheTracks();
+  }
   return (
     <>
       <input
@@ -7,7 +10,7 @@ export const TrackInput = function({ tracks, setTracks, AddTheTracks }) {
         placeholder="Enter your tasks ..."
         value={tracks}
         onChange={(e) => setTracks(e.target.value)} />
-      <button type="submit" onClick={AddTheTracks}>Start Task</button>
+      <button type="submit" onClick={AddTracksButton}>Start Task</button>
     </>
   )
 }

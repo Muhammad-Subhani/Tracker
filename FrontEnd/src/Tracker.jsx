@@ -5,6 +5,7 @@ import { ListOfTracks } from "./components/Tracker/ListOfTracks.jsx"
 import { useTrackerApi } from "./services/TrackerApi.jsx"
 import { useEffect } from "react"
 export const TrackerSection = function() {
+
   const {
     TrackerData,
     setTrackerData,
@@ -15,6 +16,7 @@ export const TrackerSection = function() {
     ClearAllTracks,
   } = useTracks();
   const { FetchAllData } = useTrackerApi();
+
   useEffect(() => {
     async function GetData() {
       const data = await FetchAllData();

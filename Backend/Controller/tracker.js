@@ -48,9 +48,10 @@ async function GetAllUserData(req, res) {
   try {
     const reqUser = Checkuser(req, res);
     if (!reqUser) return;
-    const allTracks = await trackmodel.find(reqUser._id);
+    const allTracks = await trackmodel.find({ User_id: reqUser._id });
     // ive sent success because this will be shown on the default screen so if no track gracefully success method and empty {}
     if (allTracks.length == 0) return ApiResponse.success(res, "no tracks yet!", 200, { alltracks: [] });
+    console.log(allTracks)
     return ApiResponse.success(res, "Here is list of all tracks !", 200, { alltracks: allTracks })
   } catch (error) {
     console.error("Error Ocurred !!", error);

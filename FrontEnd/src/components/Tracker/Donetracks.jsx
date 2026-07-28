@@ -5,7 +5,14 @@ export const CompletedTracks = function({ SelectionOfTrackFunction, TrackerData 
       {
         TrackerData.map((p) => {
           if (p.content != "" && p.HasStop == true) {
-            return <Tracks content={p.content} Id={p.id} NeededTrackFunc={SelectionOfTrackFunction} status={p.HasStop} />
+            return <Tracks content={p.content}
+              key={p._id}
+              Id={p._id}
+              NeededTrackFunc={SelectionOfTrackFunction}
+              status={p.HasStop}
+              StartTime={p.StartTime}
+              EndTime={p.EndTime}
+            />
 
           }
         })
