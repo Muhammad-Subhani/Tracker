@@ -33,8 +33,8 @@ export const useTracks = function() {
     }
 
   }
-  function ClearAllTracks() {
-    DeleteAll()
+  async function ClearAllTracks() {
+    await DeleteAll()
     const data = TrackerData.filter(p => p.HasStop == false)
     setTrackerData(data)
   }

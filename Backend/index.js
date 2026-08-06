@@ -6,6 +6,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser")
 const { auth_router } = require("./Routes/auth_router.js");
 const { Tracker_Router } = require("./Routes/Tracker_routes.js")
+const { TodoRouter } = require("./Routes/Todo_routes.js")
 const { transporter } = require("./Controller/transporter.js")
 const app = express();
 const corsOtpion = {
@@ -18,11 +19,12 @@ app.use(cors(corsOtpion));
 app.use(express.json());
 app.use(express.urlencoded({ extends: true }))
 app.use(morgan("dev"));
-ConnectToDatabase(DATABASE_KEY).
+ConnectToDatabase().
   then(console.log("Connected to database !!"))
   .catch((err) => console.log(err));
 // routes 
 app.use("/Auth", auth_router);
+app.use("/api/todo", TodoRouter);
 app.use("/api", Tracker_Router);
 // listenning 
 app.listen(PORT, () => console.log(`app is curently being listened on port ${PORT}`))
