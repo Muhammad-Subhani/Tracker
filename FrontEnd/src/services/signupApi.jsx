@@ -10,6 +10,7 @@ export const SignupHelpers = function() {
   const userRef = useRef();
   useEffect(() => { userRef.current.focus() }, [])
   const errRef = useRef();
+  const UserRef = useRef();
   const Navigate = useNavigate();
   const [errmsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
@@ -40,6 +41,7 @@ export const SignupHelpers = function() {
   return {
     HandleButtonClick,
     errRef,
+    UserRef,
     errmsg,
     setErrMsg,
     success,

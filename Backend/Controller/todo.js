@@ -26,48 +26,60 @@ async function CreateNewTodo(req, res) {
   }
 }
 async function DeleteParticular(req, res) {
-try {
-   const reqUser = Checkuser(req, res);
-  if (!reqUser) return;
-  const params = CheckParams(req, res);
-  if (!params) return;
-  const deletedCount = await TodoModel.deleteOne({_id : params , user_id : reqUser._id });
-  if(deletedCount >0) return ApiResponse.success(res , "deleted this todo " , 200 , {noofdeletions : deletedCount});
-  else return ApiResponse.failure(res , "NO such todo " , 401);
- 
-} catch (error) {
-   console.error("Error Ocurred !!", error);
+  try {
+    const reqUser = Checkuser(req, res);
+    if (!reqUser) return;
+    const params = CheckParams(req, res);
+    if (!params) return;
+    const deletedCount = await TodoModel.deleteOne({ _id: params, user_id: reqUser._id });
+    if (deletedCount > 0) return ApiResponse.success(res, "deleted this todo ", 200, { noofdeletions: deletedCount });
+    else return ApiResponse.failure(res, "NO such todo ", 401);
+
+  } catch (error) {
+    console.error("Error Ocurred !!", error);
     const errmsg = error.message || "Unknown  Error ! ";
     ApiResponse.failure(res, errmsg, 500);
-}
-}
-async function DeleteAll(req , res) {
-  try {
-    const reqUser = Checkuser(req, res);
-  if (!reqUser) return;
-    const deletedCount = await TodoModel.deleteMany({user_id : reqUser._id})
-    if(deletedCount >0) return ApiResponse.success(res , "deleted this todo " , 200 , {noofdeletions : deletedCount});
-  else return ApiResponse.failure(res , "NO such todo " , 401);
-  } catch (error) {
-   console.error("Error Ocurred !!", error);
-    const errmsg = error.message || "Unknown  Error ! ";
-    ApiResponse.failure(res, errmsg, 500);  
   }
 }
-async function CompletionStatus(req , res) {
+async function DeleteAll(req, res) {
   try {
     const reqUser = Checkuser(req, res);
-  if (!reqUser) return;
-  const params = CheckParams(req, res);
-  if (!params) return;
-  const updatedObj = await TodoModel.findOneAndUpdate({_id : params , user_id : reqUser._id}, 
-    {isComplete : !isComplete} , 
-    {new : true }
-  )
-  if(updatedObj) return ApiResponse.success(res , "Updated Todo" , 200 , {Todo : updatedObj} )
-    else return ApiResponse.failure(res , "Didnt find one " , 401);
+    if (!reqUser) return;
+    const deletedCount = await TodoModel.deleteMany({ user_id: reqUser._id })
+    if (deletedCount > 0) return ApiResponse.success(res, "deleted this todo ", 200, { noofdeletions: deletedCount });
+    else return ApiResponse.failure(res, "NO such todo ", 401);
   } catch (error) {
-     console.error("Error Ocurred !!", error);
+    console.error("Error Ocurred !!", error);
+    const errmsg = error.message || "Unknown  Error ! ";
+    ApiResponse.failure(res, errmsg, 500);
+  }
+}
+async function CompletionStatus(req, res) {
+  try {
+    const reqUser = Checkuser(req, res);
+    if (!reqUser) return;
+    const params = CheckParams(req, res);
+    if (!params) return;
+    const updatedObj = await TodoModel.findOneAndUpdate({ _id: params, user_id: reqUser._id },
+      { isComplete: !isComplete },
+      { new: true }
+    )
+    if (updatedObj) return ApiResponse.success(res, "Updated Todo", 200, { Todo: updatedObj })
+    else return ApiResponse.failure(res, "Didnt find one ", 401);
+  } catch (error) {
+    console.error("Error Ocurred !!", error);
+    const errmsg = error.message || "Unknown  Error ! ";
+    ApiResponse.failure(res, errmsg, 500);
+  }
+}
+async function GetAllTodos(req, res) {
+  try {
+    const reqUser = Checkuser(req, res);
+    if (!reqUser) return;
+    const allTodos = await TodoModel.find({ user_id: reqUser._id });
+    if (allTodos) return ApiResponse.success(res, "fetched all todos ", 200, { Todo: allTodos });
+  } catch (error) {
+    console.error("Error Ocurred !!", error);
     const errmsg = error.message || "Unknown  Error ! ";
     ApiResponse.failure(res, errmsg, 500);
   }
@@ -76,5 +88,7 @@ module.exports = {
   CreateNewTodo,
   DeleteParticular,
   DeleteAll,
+  CompletionStatus,
+  GetAllTodos,
 }
 
