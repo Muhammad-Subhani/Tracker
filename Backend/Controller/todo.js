@@ -13,7 +13,7 @@ async function CreateNewTodo(req, res) {
     if (!reqUser) return;
     const todoContent = CheckContent(req, res);
     if (!todoContent) return;
-    const todoEntry = TodoModel.create({
+    const todoEntry = await TodoModel.create({
       user_id: reqUser._id,
       todoContent: todoContent,
       isComplete: false,
@@ -31,8 +31,8 @@ async function DeleteParticular(req, res) {
     if (!reqUser) return;
     const params = CheckParams(req, res);
     if (!params) return;
-    const deletedCount = await TodoModel.deleteOne({ _id: params, user_id: reqUser._id });
-    if (deletedCount > 0) return ApiResponse.success(res, "deleted this todo ", 200, { noofdeletions: deletedCount });
+    const deletestatus = await TodoModel.deleteOne({ _id: params, user_id: reqUser._id });
+    if (!deletestatus.deletedCount == 0) return ApiResponse.success(res, "deleted this todo ", 200, { noofdeletions: deletestatus });
     else return ApiResponse.failure(res, "NO such todo ", 401);
 
   } catch (error) {
@@ -45,8 +45,8 @@ async function DeleteAll(req, res) {
   try {
     const reqUser = Checkuser(req, res);
     if (!reqUser) return;
-    const deletedCount = await TodoModel.deleteMany({ user_id: reqUser._id })
-    if (deletedCount > 0) return ApiResponse.success(res, "deleted this todo ", 200, { noofdeletions: deletedCount });
+    const deletedstatus = await TodoModel.deleteMany({ user_id: reqUser._id })
+    if (!deletedstatus.deletedCount == 0) return ApiResponse.success(res, "deleted this todo ", 200, { noofdeletions: deletedstatus });
     else return ApiResponse.failure(res, "NO such todo ", 401);
   } catch (error) {
     console.error("Error Ocurred !!", error);

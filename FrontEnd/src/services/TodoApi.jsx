@@ -3,7 +3,7 @@ const CREATE_ENDPOINT = "/api/todo/create";
 const ENDPOINT_FETCHDATA = "/api/todo/allTodos";
 const ENDPOINT_DELETEONE = "/api/todo/deleteone";
 const ENDPOINT_DELETEALL = "/api/todo/deleteAll";
-const ENPOINT_COMPLETE = "/api/todo//completionstatus"
+const ENPOINT_COMPLETE = "/api/todo/completionstatus"
 import { useAxiosInterceptor } from "../hooks/useAxiosInterceptor.jsx";
 export const useTodoApi = function() {
   const axiosPrivate = useAxiosInterceptor();

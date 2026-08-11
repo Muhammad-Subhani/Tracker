@@ -1,5 +1,6 @@
 import "../../styles/Todo.css"
 export const Tasks = function(props) {
+  console.log(props)
   let Status = (props.status) ? "complete" : "";
   return (
     <div>

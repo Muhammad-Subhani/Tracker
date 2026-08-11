@@ -4,9 +4,8 @@ export const TodoList = function({ Data, SelectionOfFunction }) {
     <>
       {
         Data.map((p) => {
-          if (p.content != "") {
-
-            return <Tasks content={p.content} status={p.complete} key={p.id} Id={p.id} NeededFunc={SelectionOfFunction} />
+          if (p.todoContent != "") {
+            return <Tasks content={p.todoContent} status={p.isComplete} key={p._id} Id={p._id} NeededFunc={SelectionOfFunction} />
           }
         })
       }

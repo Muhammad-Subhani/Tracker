@@ -10,7 +10,7 @@ const {
 } = require("../Controller/todo.js")
 // /api/todo/...
 TodoRouter.post("/create", FunctionValidation, CreateNewTodo);
-TodoRouter.get("allTodos", FunctionValidation, GetAllTodos);
+TodoRouter.get("/allTodos", FunctionValidation, GetAllTodos);
 TodoRouter.delete("/deleteone/:id", FunctionValidation, DeleteParticular);
 TodoRouter.delete("/deleteAll", FunctionValidation, DeleteAll);
 TodoRouter.patch("/completionstatus/:id", FunctionValidation, CompletionStatus);

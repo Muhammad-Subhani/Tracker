@@ -1,4 +1,7 @@
 export const InputField = function({ task, setTasks, AddTheTasks }) {
+  async function AddTasks() {
+    await AddTheTasks(task)
+  }
   return (
     <>
       <input
@@ -7,7 +10,7 @@ export const InputField = function({ task, setTasks, AddTheTasks }) {
         placeholder="Enter your tasks ..."
         value={task}
         onChange={(e) => setTasks(e.target.value)} />
-      <button type="submit" onClick={AddTheTasks}>Add Task</button>
+      <button type="submit" onClick={AddTasks}>Add Task</button>
     </>
   )
 }
