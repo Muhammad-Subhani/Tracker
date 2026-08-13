@@ -6,9 +6,12 @@ export const AuthProvider = function({ children }) {
     setAccessToken,
     loading,
     setLoading,
+    tab,
+    setTab
+
   } = AccessStates()
   return (
-    <AuthContext.Provider value={{ accessToken, setAccessToken, loading, setLoading }}>
+    <AuthContext.Provider value={{ accessToken, setAccessToken, loading, setLoading, tab, setTab }}>
       {children}
     </AuthContext.Provider>
   )

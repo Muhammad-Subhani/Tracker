@@ -1,7 +1,7 @@
 const {
   AuthForEveryAccess,
   VerifyUser,
-  AuthForGettingAcces
+  ApiResponse,
 } = require("../Helper/helperfunctions.js")
 async function FunctionValidation(req, res, next) {
   try {

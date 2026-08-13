@@ -7,10 +7,9 @@ import { useRef, useEffect, useState } from "react"
 
 export const SignupHelpers = function() {
 
-  const userRef = useRef();
-  useEffect(() => { userRef.current.focus() }, [])
-  const errRef = useRef();
   const UserRef = useRef();
+  useEffect(() => { UserRef.current.focus() }, [])
+  const errRef = useRef();
   const Navigate = useNavigate();
   const [errmsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);

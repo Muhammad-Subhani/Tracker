@@ -81,6 +81,14 @@ function SendCookie(res, key) {
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 }
+async function seeRevoke(res, obj) {
+  const sessionObject = await SessionModel.findById(obj.Session_id)
+  if (sessionObject.revoked == true) {
+    ApiResponse.failure(res, "You are Currently Logout !!", 401);
+    return false;
+  }
+  else return true;
+}
 class AuthForGettingAcces {
   static CheckForCookie(req, res) {
     const cookie = req.cookies.TempToken;
@@ -99,14 +107,6 @@ class AuthForGettingAcces {
     }
     else return Particular_Session;
   }
-}
-async function seeRevoke(res, obj) {
-  const sessionObject = await SessionModel.findById(obj.Session_id)
-  if (sessionObject.revoked == true) {
-    ApiResponse.failure(res, "You are Currently Logout !!", 401);
-    return false;
-  }
-  else return true;
 }
 
 class AuthForEveryAccess {
@@ -128,7 +128,6 @@ class AuthForEveryAccess {
       else return DecryptedObject
     }
   }
-
   static async SessionCheck(res, obj) {
     const data = await SessionModel.findOne({ _id: obj.Session_id, RefreshHashToken: obj.RefreshHashToken });
     if (!data) {

@@ -1,0 +1,19 @@
+.valid {
+  color: green;
+}
+
+.invalid {
+  color: red
+}
+
+.hide {
+  display: none;
+}
+
+.instructions {
+  color: greenyellow;
+}
+
+.offscreen {
+  display: none;
+}

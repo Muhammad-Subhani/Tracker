@@ -1,8 +1,16 @@
-import { useEffect, useState } from "react"
-import { useTracks } from "../../hooks/useTracks.jsx"
-export const Tracks = function(props) {
+import React, { useEffect, useState } from "react"
+import { useCallback } from "react"
+export const Tracks = React.memo((props) => {
 
-  const { RenderTime } = useTracks()
+  const RenderTime = useCallback((secs) => {
+    const totalSeconds = Math.floor(secs / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return `${hours}hrs ${minutes}mins ${seconds}secs`;
+
+
+  }, [])
   const [elapsedTime, setElapsedTime] = useState(0);
   useEffect(() => {
     // to protect againts []
@@ -29,4 +37,4 @@ export const Tracks = function(props) {
       }
     </div>
   )
-}
+})

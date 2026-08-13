@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   SignupHelpers,
 } from "../../services/signupApi.jsx";
+import "../../styles/signup.css"
 import { UserFormHooks } from "../../hooks/useSignupHook.jsx"
 export const SignupForm = function() {
 

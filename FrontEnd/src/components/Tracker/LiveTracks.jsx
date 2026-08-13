@@ -1,5 +1,7 @@
+import React from "react"
 import { Tracks } from "./EachTask.jsx"
-export const LiveTracks = function({ TrackerData, SelectionOfTrackFunction }) {
+
+export const LiveTracks = React.memo(({ TrackerData, SelectionOfTrackFunction }) => {
   return (
     <>
       {
@@ -16,4 +18,4 @@ export const LiveTracks = function({ TrackerData, SelectionOfTrackFunction }) {
       }
     </>
   )
-}
+})

@@ -25,8 +25,7 @@ export const TrackerSection = function() {
       else setTrackerData(data)
     }
     GetData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [FetchAllData, setTrackerData])
   return (
     <>
       <TrackInput tracks={tracks} setTracks={setTracks} AddTheTracks={AddTheTracks} TrackerData={TrackerData} SelectionOfTrackFunction={SelectionOfTrackFunction} />

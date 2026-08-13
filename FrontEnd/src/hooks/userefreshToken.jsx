@@ -13,8 +13,7 @@ export const useRefreshToken = () => {
       });
     setAccessToken(response?.data?.data?.Access);
     return response?.data?.data?.Access;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [setAccessToken])
   return {
     refresh,
   }

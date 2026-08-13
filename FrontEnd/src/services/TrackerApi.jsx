@@ -4,14 +4,14 @@ const ENDPOINT_STOPWATCH = "/api/updateTrack";
 const ENDPOINT_FETCHDATA = "/api/getTracks";
 const ENDPOINT_DELETEONE = "/api/deleteParticular";
 const ENDPOINT_DELETEALL = "/api/deleteAll";
+import { useCallback } from "react";
 import { useAxiosInterceptor } from "../hooks/useAxiosInterceptor.jsx";
 
 
 export const useTrackerApi = function() {
 
   const axiosPrivate = useAxiosInterceptor();
-
-  async function HandleButtonClick(content) {
+  const HandleButtonClick = useCallback(async (content) => {
     try {
       const response = await axiosPrivate.post(API_ENDPOINT
         , { content: content })
@@ -21,9 +21,9 @@ export const useTrackerApi = function() {
       else if (err?.response.status === 401 || err?.response?.status === 400) console.log("unauthorized ")
       else console.error("error occured :", err);
     }
-  }
+  }, [axiosPrivate])
 
-  async function HandleHaStop(ID) {
+  const HandleHaStop = useCallback(async (ID) => {
     try {
       const response = await axiosPrivate.patch(`${ENDPOINT_STOPWATCH}/${ID}`, {});
       return response?.data?.data?.track;
@@ -32,10 +32,9 @@ export const useTrackerApi = function() {
       else if (err?.response.status === 401 || err?.response?.status === 400) console.log("unauthorized ")
       else console.error("error occured :", err);
     }
-  }
+  }, [axiosPrivate])
 
-  // call this function in useEffect 
-  async function FetchAllData() {
+  const FetchAllData = useCallback(async () => {
     try {
       const response = await axiosPrivate.get(ENDPOINT_FETCHDATA, {});
       return response?.data?.data?.alltracks;
@@ -44,9 +43,9 @@ export const useTrackerApi = function() {
       else if (err?.response.status === 401 || err?.response?.status === 400) console.log("unauthorized ")
       else console.error("error occured :", err);
     }
-  }
+  }, [axiosPrivate])
 
-  async function DeleteParticular(ID) {
+  const DeleteParticular = useCallback(async (ID) => {
     try {
       const response = await axiosPrivate.delete(`${ENDPOINT_DELETEONE}/${ID}`, {});
       console.log(`Deleted ${response?.data?.data?.numDeleted} tracks `);
@@ -55,9 +54,9 @@ export const useTrackerApi = function() {
       else if (err?.response.status === 401 || err?.response?.status === 400) console.log("unauthorized ")
       else console.error("error occured :", err);
     }
-  }
+  }, [axiosPrivate])
 
-  async function DeleteAll() {
+  const DeleteAll = useCallback(async () => {
     try {
       const response = await axiosPrivate.delete(`${ENDPOINT_DELETEALL}`, {});
       console.log(`Deleted ${response?.data?.data?.numDeleted} tracks `);
@@ -66,8 +65,7 @@ export const useTrackerApi = function() {
       else if (err?.response.status === 401 || err?.response?.status === 400) console.log("unauthorized ")
       else console.error("error occured :", err);
     }
-  }
-
+  }, [axiosPrivate])
   // returning the data 
   return {
     HandleButtonClick,

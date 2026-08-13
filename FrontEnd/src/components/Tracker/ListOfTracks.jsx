@@ -1,6 +1,8 @@
 import { LiveTracks } from "./LiveTracks.jsx"
 import { CompletedTracks } from "./Donetracks.jsx"
-export const ListOfTracks = function({ TrackerData, SelectionOfTrackFunction }) {
+import React from "react"
+
+export const ListOfTracks = React.memo(({ TrackerData, SelectionOfTrackFunction }) => {
   return (
     <>
       <h1>Live tasks </h1>
@@ -9,4 +11,4 @@ export const ListOfTracks = function({ TrackerData, SelectionOfTrackFunction }) 
       <CompletedTracks TrackerData={TrackerData} SelectionOfTrackFunction={SelectionOfTrackFunction} />
     </>
   )
-}
+})
