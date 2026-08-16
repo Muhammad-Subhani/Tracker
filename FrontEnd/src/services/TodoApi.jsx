@@ -5,10 +5,12 @@ const ENDPOINT_DELETEONE = "/api/todo/deleteone";
 const ENDPOINT_DELETEALL = "/api/todo/deleteAll";
 const ENPOINT_COMPLETE = "/api/todo/completionstatus"
 import { useAxiosInterceptor } from "../hooks/useAxiosInterceptor.jsx";
+import { useCallback } from "react";
 export const useTodoApi = function() {
+
   const axiosPrivate = useAxiosInterceptor();
 
-  async function CreateTodo(todo) {
+  const CreateTodo = useCallback(async (todo) => {
     try {
       const response = await axiosPrivate.post(CREATE_ENDPOINT,
         { content: todo })
@@ -18,8 +20,9 @@ export const useTodoApi = function() {
       else if (err?.response.status === 401 || err?.response?.status === 400) console.log("unauthorized ")
       else console.error("error occured :", err);
     }
-  }
-  async function GetAllTodods() {
+  }, [axiosPrivate]);
+
+  const GetAllTodods = useCallback(async () => {
     try {
       const response = await axiosPrivate.get(ENDPOINT_FETCHDATA)
       return response?.data?.data?.Todo;
@@ -28,8 +31,9 @@ export const useTodoApi = function() {
       else if (err?.response.status === 401 || err?.response?.status === 400) console.log("unauthorized ")
       else console.error("error occured :", err);
     }
-  }
-  async function Deleteone(id) {
+  }, [axiosPrivate]);
+
+  const Deleteone = useCallback(async (id) => {
     try {
       const response = await axiosPrivate.delete(`${ENDPOINT_DELETEONE}/${id}`);
       return response?.data?.data?.noofdeletions
@@ -38,9 +42,9 @@ export const useTodoApi = function() {
       else if (err?.response.status === 401 || err?.response?.status === 400) console.log("unauthorized ")
       else console.error("error occured :", err);
     }
-  }
+  }, [axiosPrivate]);
 
-  async function DeleteAll() {
+  const DeleteAll = useCallback(async () => {
     try {
       const response = await axiosPrivate.delete(ENDPOINT_DELETEALL);
       return response?.data?.data?.noofdeletions
@@ -49,8 +53,9 @@ export const useTodoApi = function() {
       else if (err?.response.status === 401 || err?.response?.status === 400) console.log("unauthorized ")
       else console.error("error occured :", err);
     }
-  }
-  async function UpdateComplete(id) {
+  }, [axiosPrivate]);
+
+  const UpdateComplete = useCallback(async (id) => {
     try {
       const response = await axiosPrivate.patch(`${ENPOINT_COMPLETE}/${id}`)
       return response?.data?.data?.Todo;
@@ -59,8 +64,7 @@ export const useTodoApi = function() {
       else if (err?.response.status === 401 || err?.response?.status === 400) console.log("unauthorized ")
       else console.error("error occured :", err);
     }
-  }
-
+  }, [axiosPrivate]);
   return {
     CreateTodo,
     GetAllTodods,
