@@ -1,0 +1,57 @@
+.minicalendar {
+  height: 100%;
+  background: #1a1a1e;
+  border: 1px solid #2a2a2f;
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mini-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #d5d5db;
+}
+
+.mini-header button {
+  background: none;
+  border: none;
+  color: #d5d5db;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.mini-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  flex: 1;
+}
+
+.mini-day-label {
+  font-size: 0.6rem;
+  color: #6c6c74;
+  text-align: center;
+}
+
+.mini-cell {
+  font-size: 0.65rem;
+  color: #c8c8ce;
+  text-align: center;
+  padding: 2px 0;
+  border-radius: 4px;
+}
+
+.mini-cell.empty {
+  visibility: hidden;
+}
+
+.mini-cell.today {
+  background: #4f7cff;
+  color: white;
+  font-weight: 600;
+}

@@ -4,6 +4,7 @@ import { DataInputs } from "./Todo.jsx"
 import { Graphs } from "./Graphs.jsx"
 import { AuthContext } from "./context/AuthContext.js"
 import { useContext } from "react"
+import { Calendar } from "./Calendar.jsx"
 export const MainPage = function() {
   const {
     tab
@@ -13,6 +14,7 @@ export const MainPage = function() {
       {tab == "tracker" && <TrackerSection />}
       {tab == "todo" && <DataInputs />}
       {tab == "graphs" && <Graphs />}
+      {tab == "calendar" && <Calendar />}
     </div>
   )
 }

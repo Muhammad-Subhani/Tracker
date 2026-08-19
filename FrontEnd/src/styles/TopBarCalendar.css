@@ -1,0 +1,32 @@
+.topbar {
+  display: grid;
+  grid-template-columns: 2fr 2fr 2fr 1.2fr;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "video video video mini"
+    "stat1 stat2 stat3 mini";
+  gap: 12px;
+}
+
+.video {
+  grid-area: video;
+  background: #1a1a1e;
+  border-radius: 12px;
+  min-height: 100px;
+}
+
+.stat1 {
+  grid-area: stat1;
+}
+
+.stat2 {
+  grid-area: stat2;
+}
+
+.stat3 {
+  grid-area: stat3;
+}
+
+.mini {
+  grid-area: mini;
+}

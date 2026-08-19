@@ -13,6 +13,7 @@ export const Slidebar = function({ isOpen, toggleSlidebar }) {
           <a href="#" onClick={() => setTab("graphs")}>Graphs</a>
           <a href="#" onClick={() => setTab("todo")}>Todos</a>
           <a href="#" onClick={() => setTab("tracker")}>Tracker</a>
+          <a href="#" onClick={() => setTab("calendar")}>Calendar</a>
           <a href="#">Today</a>
           <a href="#">Habits</a>
           <a href="#">Goals</a>
