@@ -121,12 +121,19 @@ class AuthForEveryAccess {
     }
   }
   static async RevokeCheck(res, token) {
-    const DecryptedObject = await DecryptToken(token);
-    if (DecryptedObject) {
-      const revokeres = seeRevoke(res, DecryptedObject)
-      if (!revokeres) return null;
-      else return DecryptedObject
+    try {
+      const DecryptedObject = await DecryptToken(token);
+      if (DecryptedObject) {
+        const revokeres = seeRevoke(res, DecryptedObject)
+        if (!revokeres) return null;
+        else return DecryptedObject
+      }
+    } catch (err) {
+      ApiResponse.failure(res, "session expired ", 401);
+      return null;
     }
+
+
   }
   static async SessionCheck(res, obj) {
     const data = await SessionModel.findOne({ _id: obj.Session_id, RefreshHashToken: obj.RefreshHashToken });

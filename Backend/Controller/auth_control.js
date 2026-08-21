@@ -86,6 +86,8 @@ async function LoginFunction(req, res) {
 async function GetAccessToken(req, res) {
   const cookie = AuthForGettingAcces.CheckForCookie(req, res);
   if (!cookie) return;
+  const decryptedData = DecryptToken(cookie);
+  if (!decryptedData) return ApiResponse.failure(res, " session Expired ", 401);
   const sessionObject = await AuthForGettingAcces.RevokeCheck(cookie, res);
   if (!sessionObject) return;
   const userObject = await usermodel.findOne({ _id: sessionObject.User_id });
@@ -109,10 +111,15 @@ async function LogoutOneDevice(req, res) {
   const sessionObject = await AuthForGettingAcces.RevokeCheck(cookie, res);
   if (!sessionObject) return;
   const Data = DecryptToken(cookie);
+  if (!Data) {
+    sessionObject.revoked = true;
+    await sessionObject.save();
+    return ApiResponse.success(res, "Successfully logout from one device cuz session expired ", 200, { status: "loggedOut" });
+  }
   if (Data.verified == false) return ApiResponse.failure(res, "You are not authorized !", 500);
   sessionObject.revoked = true;
   await sessionObject.save();
-  return ApiResponse.success(res, "Successfully logout from one device", 200, { username: Data.Name }, 200);
+  return ApiResponse.success(res, "Successfully logout from one device", 200, { username: Data.Name });
   // ==g0 to the main landing page ==
 }
 async function LogoutAllDevices(req, res) {

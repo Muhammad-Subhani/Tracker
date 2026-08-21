@@ -14,7 +14,15 @@ export const useRefreshToken = () => {
     setAccessToken(response?.data?.data?.Access);
     return response?.data?.data?.Access;
   }, [setAccessToken])
+  const LogOutFromOneDevice = useCallback(async () => {
+    const response = await axios.get("/Auth/LogoutSelf", {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    });
+    return response?.data?.data?.status;
+  }, [])
   return {
     refresh,
+    LogOutFromOneDevice
   }
 }

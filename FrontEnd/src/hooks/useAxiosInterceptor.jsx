@@ -7,8 +7,8 @@ import { useContext, useEffect } from "react";
 // interceptor 
 export const useAxiosInterceptor = () => {
 
-  const { refresh } = useRefreshToken()
-  const { accessToken } = useContext(AuthContext);
+  const { refresh, LogOutFromOneDevice } = useRefreshToken()
+  const { accessToken, setAccessToken } = useContext(AuthContext);
 
   useEffect(() => {
 
@@ -29,10 +29,18 @@ export const useAxiosInterceptor = () => {
       async (error) => {
         const prevRequest = error?.config;
         if (error?.response?.status === 401 && !prevRequest?.sent) {
-          prevRequest.sent = true; // prevent infinite retry loops
-          const newAccessToken = await refresh();
-          prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-          return axiosPrivate(prevRequest); // retry original request
+          prevRequest.sent = true;
+          try {
+            const newAccessToken = await refresh();
+            prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+            return axiosPrivate(prevRequest);
+          } catch (refreshError) {
+            // refresh token itself is dead — this is the missing branch
+            LogOutFromOneDevice();               // clear context/state
+            window.location.href = "/Auth/Login";
+            setAccessToken("");
+            return Promise.reject(refreshError);
+          }
         }
         return Promise.reject(error);
       }
@@ -44,7 +52,7 @@ export const useAxiosInterceptor = () => {
       axiosPrivate.interceptors.request.eject(reqInterceptor);
       axiosPrivate.interceptors.response.eject(responseIntercept);
     };
-  }, [accessToken, refresh])
+  }, [accessToken, refresh, LogOutFromOneDevice, setAccessToken])
 
   // in the last returning the axios instance 
   return axiosPrivate
