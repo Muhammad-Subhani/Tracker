@@ -55,6 +55,7 @@ class AuthenticateLogin {
     else return true;
   }
   static async CheckUser(email, password, res) {
+    console.log(GetHash(password))
     const entry = await usermodel.findOne({ email: email, password: GetHash(password) });
     if (!entry) {
       ApiResponse.failure(res, "There is no such user try signUp !", 401);

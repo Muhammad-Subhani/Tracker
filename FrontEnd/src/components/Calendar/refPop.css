@@ -1,0 +1,70 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal-box {
+  background: #2d2e30;
+  color: #e8eaed;
+  padding: 24px 28px;
+  border-radius: 12px;
+  min-width: 320px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+  font-family: "Google Sans", Roboto, Arial, sans-serif;
+}
+
+.modal-box h2 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0 0 16px;
+}
+
+.modal-box label {
+  display: block;
+  font-size: 0.75rem;
+  color: #9aa0a6;
+  margin-bottom: 4px;
+}
+
+.modal-box input[type="text"] {
+  width: 100%;
+  background: #202124;
+  border: 1px solid #5f6368;
+  border-radius: 6px;
+  color: #e8eaed;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  margin-bottom: 14px;
+}
+
+.modal-box input[type="text"]:focus {
+  outline: none;
+  border-color: #8ab4f8;
+}
+
+.modal-box p {
+  font-size: 0.8rem;
+  color: #9aa0a6;
+  margin: 4px 0;
+}
+
+.modal-box button {
+  background-color: #8ab4f8;
+  color: #202124;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.modal-box button:hover {
+  background-color: #aecbfa;
+}

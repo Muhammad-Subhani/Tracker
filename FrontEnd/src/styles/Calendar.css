@@ -1,10 +1,16 @@
-.box1 {
-  height: 25vh;
-  width: 99%;
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+
+.BIG {
+  height: 99vh;
+  width: 100%;
 }
 
 .box2 {
-  height: 72vh;
+  height: 90%;
   width: 99%;
-  background-color: black;
 }

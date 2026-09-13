@@ -13,7 +13,7 @@ export const PersistentLogin = function() {
   const { refresh } = useRefreshToken();
 
   useEffect(() => {
-
+    console.log("this should run ")
     // this thing protects us agaianst the memory leak when user 
     // ahs unmounted the component 
 

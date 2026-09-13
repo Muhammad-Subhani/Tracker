@@ -1,11 +1,44 @@
 .topbar {
   display: grid;
-  grid-template-columns: 2fr 2fr 2fr 1.2fr;
+  grid-template-columns: 0.7fr 2fr 2fr 2fr 1.2fr;
   grid-template-rows: auto auto;
   grid-template-areas:
-    "video video video mini"
-    "stat1 stat2 stat3 mini";
+    "monthnav video video video mini"
+    "monthnav stat1 stat2 stat3 mini";
   gap: 12px;
+}
+
+.monthnav {
+  grid-area: monthnav;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: #1a1a1e;
+  border-radius: 12px;
+  padding: 8px 0;
+}
+
+.monthnav-btn {
+  background: transparent;
+  border: none;
+  color: #9aa0a6;
+  font-size: 0.7rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 8px;
+  transition: color 0.15s ease;
+}
+
+.monthnav-btn:hover {
+  color: #e8eaed;
+}
+
+.monthnav-label {
+  font-size: 0.75rem;
+  color: #e8eaed;
+  font-weight: 500;
 }
 
 .video {
