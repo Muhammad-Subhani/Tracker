@@ -1,252 +1,350 @@
-html,
-body {
+/* Google Calendar Week View & Grid Styling */
+
+.calendar-main-view {
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  width: 100%;
+  min-height: 0;
+  position: relative;
   overflow: hidden;
-  /* page itself never scrolls */
-  margin: 0;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  background-color: #0e0e0f;
+  font-family: "Google Sans", Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #e8eaed;
-  font-family: "Google Sans", Roboto, Arial, sans-serif;
 }
 
+/* =========================================================
+   Scrollable Container
+   ========================================================= */
 .scrollable {
-  height: 72vh;
-  /* or calc(100vh - <header height>) if h1 sits above it */
+  flex: 1;
+  min-height: 0;
   width: 100%;
   overflow-x: auto;
   overflow-y: auto;
-  border: 1px solid #444746;
-  border-radius: 8px;
+  border: 1px solid #3c4043;
+  border-radius: 16px;
   background-color: #131314;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
+/* Chrome / Safari / Edge Scrollbars */
 .scrollable::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
 }
 
 .scrollable::-webkit-scrollbar-track {
-  background: #131314;
-  /* matches your grid background */
+  background: transparent;
 }
 
 .scrollable::-webkit-scrollbar-thumb {
   background-color: #5f6368;
-  /* grey, matches your button border color */
-  border-radius: 8px;
-  border: 3px solid #131314;
-  /* creates padding so thumb looks inset, not edge-to-edge */
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
 .scrollable::-webkit-scrollbar-thumb:hover {
   background-color: #80868b;
-  /* slightly lighter grey on hover */
+}
+
+.scrollable::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 /* Firefox */
 .scrollable {
   scrollbar-width: thin;
-  scrollbar-color: #5f6368 #131314;
-  /* thumb track */
+  scrollbar-color: #5f6368 transparent;
 }
 
-/* .scrollable { */
-/*   max-height: 85vh; */
-/*   width: 100%; */
-/*   overflow-x: auto; */
-/*   overflow-y: auto; */
-/*   border: 1px solid #444746; */
-/*   border-radius: 8px; */
-/*   background-color: #131314; */
-/* } */
-
-/* .calendar-grid { */
-/*   display: grid; */
-/*   grid-template-columns: 60px repeat(7, minmax(120px, 1fr)); */
-/*   grid-auto-rows: 55px; */
-/*   min-width: 900px; */
-/*   position: relative; */
-/*   user-select: none; */
-/*   -webkit-user-select: none; */
-/*   background-color: #131314; */
-/* } */
+/* =========================================================
+   Calendar Grid (Time Labels + 7 Days)
+   ========================================================= */
 .calendar-grid {
   display: grid;
-  grid-template-columns: 60px repeat(7, minmax(120px, 1fr));
-  grid-template-rows: 72px;
-  /* explicit header row height */
-  grid-auto-rows: 55px;
-  /* everything after (hour rows) */
-  min-width: 900px;
+  grid-template-columns: 60px repeat(7, minmax(130px, 1fr));
+  grid-template-rows: 72px; /* Sticky day headers row */
+  grid-auto-rows: 55px;     /* Hour rows (matches Hour_height = 55 in hooks) */
+  min-width: 960px;
   position: relative;
   user-select: none;
   -webkit-user-select: none;
   background-color: #131314;
 }
 
+/* =========================================================
+   Top Left Sticky Corner Cell
+   ========================================================= */
+.corner {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  background-color: #1e1f20;
+  border-bottom: 1px solid #3c4043;
+  border-right: 1px solid #3c4043;
+}
+
+/* =========================================================
+   Sticky Day Header Cells (Sun - Sat)
+   ========================================================= */
 .day-header {
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 30;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 3px;
   background-color: #1e1f20;
-  border-bottom: 1px solid #2d2e30;
+  border-bottom: 1px solid #3c4043;
+  border-left: 1px solid #3c4043;
+  padding: 6px 0;
+  transition: background-color 0.15s ease;
 }
 
 .day-name {
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #9aa0a6;
 }
 
 .day-number {
-  font-size: 1.5rem;
-  font-weight: 500;
+  font-size: 1.45rem;
+  font-weight: 400;
   color: #e8eaed;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.corner {
-  position: sticky;
-  top: 0;
-  left: 0;
-  z-index: 3;
-  background-color: #1e1f20;
-  border-bottom: 1px solid #2d2e30;
+.day-header:not(.today):hover .day-number {
+  background-color: rgba(232, 234, 237, 0.08);
 }
 
-/* .corner { */
-/*   position: sticky; */
-/*   top: 0; */
-/*   left: 0; */
-/*   z-index: 3; */
-/*   background-color: #1e1f20; */
-/*   border-bottom: 2px solid #444746; */
-/* } */
-/**/
-/* .day-header { */
-/*   position: sticky; */
-/*   top: 0; */
-/*   z-index: 100; */
-/*   display: flex; */
-/*   flex-direction: column; */
-/*   align-items: center; */
-/*   gap: 2px; */
-/*   background-color: #1e1f20; */
-/*   border-bottom: 2px solid #444746; */
-/* } */
-/**/
-/* .day-name { */
-/*   font-size: 0.7rem; */
-/*   font-weight: 500; */
-/*   letter-spacing: 0.3px; */
-/*   color: #9aa0a6; */
-/* } */
-/**/
-/* .day-number { */
-/*   font-size: 1.3rem; */
-/*   font-weight: 400; */
-/*   color: #e8eaed; */
-/*   width: 36px; */
-/*   height: 36px; */
-/*   display: flex; */
-/*   align-items: center; */
-/*   justify-content: center; */
-/*   border-radius: 50%; */
-/* } */
-/**/
+/* Today Header Accent (Google Calendar Signature) */
 .day-header.today .day-name {
   color: #8ab4f8;
+  font-weight: 600;
 }
 
 .day-header.today .day-number {
   background-color: #8ab4f8;
-  color: #202124;
-  font-weight: 500;
+  color: #131314;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(138, 180, 248, 0.4);
 }
 
-/* .day-header { */
-/*   position: sticky; */
-/*   top: 0; */
-/*   text-align: center; */
-/*   padding: 10px 0 8px; */
-/*   font-weight: 500; */
-/*   font-size: 0.75rem; */
-/*   letter-spacing: 0.3px; */
-/*   color: #c4c7c5; */
-/*   background-color: #1e1f20; */
-/*   border-bottom: 2px solid #444746; */
-/*   border-left: 1px solid #303134; */
-/*   z-index: 100; */
-/* } */
-/**/
+/* =========================================================
+   Time Gutter Labels (Left Column)
+   ========================================================= */
 .time-label {
-  font-size: 0.9rem;
+  position: sticky;
+  left: 0;
+  z-index: 20;
+  background-color: #131314;
+  font-size: 0.72rem;
+  font-weight: 400;
   color: #9aa0a6;
   text-align: right;
-  padding-right: 8px;
-  transform: translateY(7px);
+  padding-right: 10px;
+  transform: translateY(-50%);
   font-variant-numeric: tabular-nums;
+  border-right: 1px solid #3c4043;
+  user-select: none;
+  font-family: Roboto, "Google Sans", sans-serif;
 }
 
+/* =========================================================
+   Hour Cells (The Calendar Matrix)
+   ========================================================= */
 .hour-cell {
-  border-bottom: 1px solid #3c4043;
-  border-left: 1px solid #3c4043;
+  border-bottom: 1px solid #282a2d;
+  border-left: 1px solid #282a2d;
+  position: relative;
   transition: background-color 0.1s ease;
+  /* Google Calendar subtle 30-minute guide line */
+  background-image: linear-gradient(to bottom, transparent 27px, #1d1e20 27px, #1d1e20 28px, transparent 28px);
 }
 
 .hour-cell:hover {
-  background-color: rgba(138, 180, 248, 0.08);
+  background-color: rgba(138, 180, 248, 0.04);
   cursor: pointer;
 }
 
-
-
-.drag-box {
-  background-color: rgba(25, 71, 138, 0.85);
-  border: 1px solid #3b78e7;
-  border-radius: 4px;
+/* =========================================================
+   Existing Events (Google Calendar Chips)
+   ========================================================= */
+.calendar-event-chip {
+  background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%);
+  border-left: 4px solid #8ab4f8;
+  border-radius: 6px;
   z-index: 10;
-  pointer-events: none;
-}
-
-button {
-  background-color: transparent;
-  border: 1px solid #5f6368;
-  color: #e8eaed;
-  border-radius: 20px;
-  padding: 6px 14px;
-  font-size: 0.85rem;
+  padding: 3px 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
   cursor: pointer;
-  margin: 8px 4px;
-  transition: background-color 0.15s ease;
+  display: flex;
+  align-items: center;
+  pointer-events: auto;
 }
 
-button:hover {
-  background-color: #303134;
+.calendar-event-chip:hover {
+  background: #1b66ca;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  transform: scale(1.01);
 }
 
-h1 {
-  font-size: 1.1rem;
+.event-chip-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.event-chip-title {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.event-chip-time {
+  font-size: 0.68rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  margin-top: 1px;
+}
+
+/* =========================================================
+   Drag Selection Box (While creating a new event)
+   ========================================================= */
+.calendar-drag-selection {
+  background-color: rgba(66, 133, 244, 0.3) !important;
+  border: 2px solid #8ab4f8 !important;
+  border-radius: 6px !important;
+  z-index: 22 !important;
+  pointer-events: none;
+  padding: 4px 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.drag-selection-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #8ab4f8;
+  line-height: 1.2;
+}
+
+.drag-selection-time {
+  font-size: 0.7rem;
   font-weight: 500;
   color: #e8eaed;
-  padding: 8px 4px;
+  line-height: 1.2;
+  margin-top: 1px;
+}
+
+/* Fallback generic drag-box */
+.drag-box {
+  background-color: rgba(66, 133, 244, 0.3);
+  border: 1px solid #8ab4f8;
+  border-radius: 6px;
+}
+
+/* =========================================================
+   Loading Shimmer & Status Feedback
+   ========================================================= */
+.google-cal-shimmer-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, #8ab4f8 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: googleShimmer 1.8s infinite ease-in-out;
+  z-index: 100;
+}
+
+@keyframes googleShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.google-cal-status-toast {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #202124;
+  border: 1px solid #3c4043;
+  border-radius: 24px;
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #e8eaed;
+  font-size: 0.8rem;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  z-index: 80;
+  animation: toastFade 0.2s ease;
+}
+
+.google-cal-status-toast.error {
+  border-color: #f28b82;
+  color: #f28b82;
+}
+
+.status-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #3c4043;
+  border-top-color: #8ab4f8;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes toastFade {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }

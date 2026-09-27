@@ -53,9 +53,14 @@ export const Calendar = function() {
 
 
   return (
-    <>
-      {isFetching && <p> Fetching the Calendar Data ...</p>}
-      <Topbar headerTitle={headerTitle} GoNextdate={GoNextdate} Prevdate={Prevdate} />
+    <div className="calendar-main-view">
+      {isFetching && <div className="google-cal-shimmer-bar" />}
+      <Topbar
+        headerTitle={headerTitle}
+        GoNextdate={GoNextdate}
+        Prevdate={Prevdate}
+        goToToday={() => setToday(new Date())}
+      />
       <div className="scrollable">
         <div className="calendar-grid"
           ref={gridref}
@@ -108,12 +113,13 @@ export const Calendar = function() {
             year={year}
             date={cells[newEvent.day]}
           />}
-          {/* displaying the alreading exiting  */}
+          {/* displaying the already existing events */}
           {storage
             .filter((p) => p.date == cells[p.dayno] && p.year == year && p.month == month)
             .map((p) => {
               return <ExistingEvents
                 key={p._id}
+                title={p.title}
                 headerheight={headerHeight}
                 dayno={p.dayno}
                 startingminutes={p.startingminutes}
@@ -123,9 +129,17 @@ export const Calendar = function() {
             })}
         </div>
       </div>
-      {isLoading && <h1>Loading Calendar Tab First Time ...</h1>}
-      {isError && <p>Unexpected Error OOPS...</p>}
-      {isFetching && <p>Fetching the Calendar Data ...</p>}
-    </ >
+      {isLoading && (
+        <div className="google-cal-status-toast">
+          <div className="status-spinner"></div>
+          <span>Loading Calendar...</span>
+        </div>
+      )}
+      {isError && (
+        <div className="google-cal-status-toast error">
+          <span>Failed to load events. Check connection.</span>
+        </div>
+      )}
+    </div>
   );
 }

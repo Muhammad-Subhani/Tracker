@@ -1,11 +1,14 @@
 import React from "react";
 import "../../styles/Stats.css";
 
-export const Stats = React.memo(({ label, value }) => {
+export const Stats = React.memo(({ label, value, type }) => {
   return (
-    <div className="stats-card">
-      <span className="stats-value">{value}</span>
-      <span className="stats-label">{label}</span>
+    <div className={`stats-card ${type ? `stats-${type}` : ""}`}>
+      <div className="stats-indicator"></div>
+      <div className="stats-body">
+        <span className="stats-value">{value}</span>
+        <span className="stats-label">{label}</span>
+      </div>
     </div>
   );
 });

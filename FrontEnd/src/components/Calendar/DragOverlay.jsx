@@ -12,11 +12,12 @@ function GetHours(h) {
   else return (h < 12) ? h : h - 12;
 }
 function GiveActualTime(mins, h) {
-  let meridian = formatHour(Math.floor(h));
-  let hrs = (GetHours(Math.floor(h)))
-  let min = (mins % 60);
-  let ans = `${hrs}:${min}${meridian}`
-  return ans
+  let meridian = formatHour(Math.floor(h) % 24);
+  let hrs = (GetHours(Math.floor(h)));
+  let min = Math.floor(mins % 60);
+  let minFormatted = min < 10 ? `0${min}` : min;
+  let ans = `${hrs}:${minFormatted}${meridian}`;
+  return ans;
 }
 export const DragOverlay = function({ gridref, headerGap, headerHeight, Px_per_mins, onSelect, isModelOpen }) {
   const [startDrag, setStartDrag] = useState(null);
@@ -188,19 +189,22 @@ export const DragOverlay = function({ gridref, headerGap, headerHeight, Px_per_m
       {
         (isdragging || isModelOpen) && startDrag && endDrag && (
           <div
-            className="drag-box"
+            className="calendar-drag-selection drag-box"
             style={{
               position: "absolute",
               top: ` ${top}px `,
-              height: `${Math.min(height, gridref.current.getBoundingClientRect().height - headerGap.current.getBoundingClientRect().height - 10)}px `,
-              left: `calc(60px + ${startDrag.day} * (100% - 60px) / 7)`,
-              width: `calc((100% - 60px) / 7)`,
+              height: `${Math.max(18, Math.min(height, gridref.current.getBoundingClientRect().height - headerGap.current.getBoundingClientRect().height - 10))}px `,
+              left: `calc(60px + ${startDrag.day} * (100% - 60px) / 7 + 2px)`,
+              width: `calc((100% - 60px) / 7 - 4px)`,
               pointerEvents: "none",
             }}
           >
-            {GiveActualTime(Math.min(startDrag.minutes, endDrag.minutes), Math.min(startDrag.minutes, endDrag.minutes) / 60)}
-            - {GiveActualTime(Math.max(startDrag.minutes, endDrag.minutes), Math.max(startDrag.minutes, endDrag.minutes) / 60)}
-
+            <div className="drag-selection-title">(New Event)</div>
+            <div className="drag-selection-time">
+              {GiveActualTime(Math.min(startDrag.minutes, endDrag.minutes), Math.min(startDrag.minutes, endDrag.minutes) / 60)}
+              {" – "}
+              {GiveActualTime(Math.max(startDrag.minutes, endDrag.minutes), Math.max(startDrag.minutes, endDrag.minutes) / 60)}
+            </div>
           </div>
         )}
     </>

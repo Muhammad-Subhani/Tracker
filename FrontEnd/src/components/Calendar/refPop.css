@@ -1,70 +1,216 @@
+/* Google Calendar Event Creation Modal */
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 50;
+  z-index: 999;
+  animation: modalFadeIn 0.18s ease-out;
 }
 
 .modal-box {
-  background: #2d2e30;
-  color: #e8eaed;
-  padding: 24px 28px;
-  border-radius: 12px;
-  min-width: 320px;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
-  font-family: "Google Sans", Roboto, Arial, sans-serif;
-}
-
-.modal-box h2 {
-  font-size: 1.1rem;
-  font-weight: 500;
-  margin: 0 0 16px;
-}
-
-.modal-box label {
-  display: block;
-  font-size: 0.75rem;
-  color: #9aa0a6;
-  margin-bottom: 4px;
-}
-
-.modal-box input[type="text"] {
-  width: 100%;
   background: #202124;
-  border: 1px solid #5f6368;
-  border-radius: 6px;
   color: #e8eaed;
-  padding: 8px 10px;
-  font-size: 0.9rem;
-  margin-bottom: 14px;
+  padding: 22px 26px;
+  border-radius: 20px;
+  border: 1px solid #3c4043;
+  width: 420px;
+  max-width: 90vw;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
+  font-family: "Google Sans", Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  animation: modalScaleUp 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
 }
 
-.modal-box input[type="text"]:focus {
-  outline: none;
-  border-color: #8ab4f8;
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
-.modal-box p {
-  font-size: 0.8rem;
-  color: #9aa0a6;
-  margin: 4px 0;
+.modal-header-pill {
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8ab4f8;
+  background: rgba(138, 180, 248, 0.12);
+  padding: 3px 12px;
+  border-radius: 14px;
 }
 
-.modal-box button {
-  background-color: #8ab4f8;
-  color: #202124;
+.modal-close-btn {
+  background: transparent;
   border: none;
+  color: #9aa0a6;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+}
+
+.modal-close-btn:hover {
+  background: rgba(232, 234, 237, 0.12);
+  color: #e8eaed;
+}
+
+.modal-input-group {
+  margin-bottom: 18px;
+}
+
+.modal-title-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #5f6368;
+  color: #e8eaed;
+  font-size: 1.25rem;
+  font-weight: 400;
+  padding: 8px 2px;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.modal-title-input:focus {
+  outline: none;
+  border-bottom-color: #8ab4f8;
+}
+
+.modal-title-input::placeholder {
+  color: #9aa0a6;
+  font-weight: 400;
+}
+
+.modal-details-card {
+  background: #282a2d;
+  border: 1px solid #3c4043;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 24px;
+}
+
+.modal-detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.modal-icon {
+  color: #9aa0a6;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.modal-time-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.modal-time-date {
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: #e8eaed;
+}
+
+.modal-time-hours {
+  font-size: 0.78rem;
+  color: #9aa0a6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.modal-duration-tag {
+  font-size: 0.7rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 1px 7px;
+  color: #bdc1c6;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-btn-cancel {
+  background: transparent;
+  border: none;
+  color: #8ab4f8;
   border-radius: 20px;
   padding: 8px 18px;
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
-  margin-top: 10px;
+  font-family: inherit;
+  transition: background-color 0.15s ease;
 }
 
-.modal-box button:hover {
-  background-color: #aecbfa;
+.modal-btn-cancel:hover {
+  background: rgba(138, 180, 248, 0.1);
+}
+
+.modal-btn-save {
+  background: #8ab4f8;
+  border: none;
+  color: #131314;
+  border-radius: 20px;
+  padding: 8px 22px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: all 0.15s ease;
+}
+
+.modal-btn-save:hover:not(:disabled) {
+  background: #aecbfa;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.modal-btn-save:disabled {
+  opacity: 0.4;
+  background: #5f6368;
+  color: #9aa0a6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalScaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

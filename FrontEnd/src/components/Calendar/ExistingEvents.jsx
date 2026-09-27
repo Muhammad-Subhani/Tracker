@@ -1,38 +1,49 @@
-import "./refcCss.css"
+import "./refcCss.css";
 
-function formatHour(h) {
-  if (h === 0) return "am";
-  if (h === 12) return "pm";
-  return h < 12 ? `am` : `pm`;
+function formatMeridian(h) {
+  return h < 12 || h === 24 ? "am" : "pm";
 }
-function GetHours(h) {
-  if (h == 0 || h == 12) return 12;
-  else return (h < 12) ? h : h - 12;
+
+function getHours(h) {
+  const mod = Math.floor(h) % 24;
+  if (mod === 0 || mod === 12) return 12;
+  return mod < 12 ? mod : mod - 12;
 }
-function GiveActualTime(mins, h) {
-  let meridian = formatHour(Math.floor(h) % 24);
-  let hrs = Math.floor(GetHours(h))
-  let min = (mins % 60);
-  let ans = `${hrs}:${min}${meridian}`
-  return ans
+
+function giveActualTime(mins, h) {
+  const meridian = formatMeridian(h);
+  const hrs = getHours(h);
+  const min = Math.floor(mins % 60);
+  const formattedMin = min < 10 ? `0${min}` : min;
+  return `${hrs}:${formattedMin}${meridian}`;
 }
-export const ExistingEvents = function({ headerheight, dayno, startingminutes, endingminutes, px_per_min }) {
+
+export const ExistingEvents = function({ title, headerheight, dayno, startingminutes, endingminutes, px_per_min }) {
   const start = startingminutes * px_per_min;
   const end = endingminutes * px_per_min;
+  const height = Math.max(end - start, 22);
+  const isCompact = height < 38;
+
+  const timeString = `${giveActualTime(startingminutes, startingminutes / 60)} – ${giveActualTime(endingminutes, endingminutes / 60)}`;
+
   return (
     <div
-      className="drag-box"
+      className="calendar-event-chip drag-box"
       style={{
         position: 'absolute',
         top: `${start + headerheight}px`,
-        height: `${end - start}px`,
-        left: `calc(60px + ${dayno} * (100% - 60px) / 7)`,
-        width: `calc((100% - 60px) / 7)`,
+        height: `${height}px`,
+        left: `calc(60px + ${dayno} * (100% - 60px) / 7 + 2px)`,
+        width: `calc((100% - 60px) / 7 - 4px)`,
       }}
+      title={`${title || "Scheduled Event"} (${timeString})`}
     >
-
-      {GiveActualTime(Math.floor(startingminutes), Math.floor(startingminutes / 60))}
-      - {GiveActualTime(Math.floor(endingminutes), Math.floor(endingminutes / 60))}
+      <div className="event-chip-content">
+        <span className="event-chip-title">{title || "Scheduled Event"}</span>
+        {!isCompact && (
+          <span className="event-chip-time">{timeString}</span>
+        )}
+      </div>
     </div>
-  )
-}
+  );
+};
