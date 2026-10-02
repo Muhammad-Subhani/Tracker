@@ -1,0 +1,58 @@
+/* Tracker Dashboard Design System Tokens
+   Extracted directly from Calendar and Slidebar styles */
+
+:root {
+  /* Core Surface & Border Palette */
+  --tracker-bg: #131314;
+  --tracker-card-bg: #1e1f20;
+  --tracker-card-bg-elevated: #282a2d;
+  --tracker-card-bg-subtle: #171819;
+  --tracker-card-border: #3c4043;
+  --tracker-card-border-subtle: #282a2d;
+  --tracker-card-border-hover: #5f6368;
+
+  /* Typography Colors */
+  --tracker-text-primary: #e8eaed;
+  --tracker-text-secondary: #9aa0a6;
+  --tracker-text-muted: #5f6368;
+  --tracker-text-inverse: #131314;
+
+  /* Accent Colors */
+  --tracker-accent: #8ab4f8;
+  --tracker-accent-hover: #aecbfa;
+  --tracker-accent-subtle: rgba(138, 180, 248, 0.12);
+  --tracker-accent-glow: rgba(138, 180, 248, 0.25);
+  --tracker-accent-active: #004a77;
+  --tracker-accent-dark: #1a73e8;
+
+  /* Semantic Status Colors */
+  --tracker-success: #81c995;
+  --tracker-success-subtle: rgba(129, 201, 149, 0.12);
+  --tracker-warning: #fdd663;
+  --tracker-danger: #f28b82;
+
+  /* Typography Scale */
+  --tracker-font-family: "Google Sans", Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --tracker-font-hero: 2.25rem;    /* 36px */
+  --tracker-font-stat: 2.15rem;    /* ~34px */
+  --tracker-font-heading: 1.15rem; /* ~18px */
+  --tracker-font-title: 1rem;      /* 16px */
+  --tracker-font-body: 0.875rem;   /* 14px */
+  --tracker-font-label: 0.75rem;   /* 12px */
+  --tracker-font-micro: 0.6875rem; /* 11px */
+
+  /* Consistent Border Radii */
+  --tracker-radius-card: 16px;
+  --tracker-radius-inner: 10px;
+  --tracker-radius-pill: 24px;
+  --tracker-radius-circle: 50%;
+
+  /* Spacing Scale */
+  --tracker-space-1: 4px;
+  --tracker-space-2: 8px;
+  --tracker-space-3: 12px;
+  --tracker-space-4: 16px;
+  --tracker-space-5: 20px;
+  --tracker-space-6: 24px;
+  --tracker-space-8: 32px;
+}

@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
 import { AuthContext } from "./AuthContext.js"
 import { AccessStates } from "../hooks/useAuth.jsx"
+import { useRefreshToken } from '../hooks/userefreshToken.jsx';
 export const AuthProvider = ({ children }) => {
+  const { LogOutFromOneDevice } = useRefreshToken()
   const { accessToken,
     setAccessToken,
     loading,
@@ -20,6 +22,9 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (err) {
         console.error("Not logged in", err);
+        LogOutFromOneDevice();               // clear context/state
+        window.location.href = "/Auth/Login";
+        setAccessToken("");
       } finally {
         setLoading(false);
       };

@@ -176,6 +176,14 @@ class Otp_Helper {
   }
 }
 
+function CheckUser(req, res) {
+  const reqUser = req.user;
+  if (!reqUser) {
+    ApiResponse.failure(res, "Cant Find the User Who requested !!", 500);
+    return null;
+  }
+  else return reqUser;
+}
 module.exports = {
   GetHash,
   ApiResponse,
@@ -187,4 +195,5 @@ module.exports = {
   OTPP,
   Otp_Helper,
   VerifyUser,
+  CheckUser
 }

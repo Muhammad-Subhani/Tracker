@@ -1,65 +1,234 @@
+/* Google Calendar Top Bar Layout & Controls */
+
 .topbar {
   display: grid;
-  grid-template-columns: 0.7fr 2fr 2fr 2fr 1.2fr;
-  grid-template-rows: auto auto;
+  grid-template-columns: 210px repeat(3, minmax(130px, 1fr)) 240px;
+  grid-template-rows: 105px 75px;
   grid-template-areas:
     "monthnav video video video mini"
     "monthnav stat1 stat2 stat3 mini";
   gap: 12px;
+  width: 100%;
+  flex-shrink: 0;
+  margin-bottom: 12px;
 }
 
+/* =========================================================
+   Month Navigation Card (Google Calendar Header)
+   ========================================================= */
 .monthnav {
   grid-area: monthnav;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  background: #1e1f20;
+  border: 1px solid #3c4043;
+  border-radius: 16px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.2s ease;
+}
+
+.monthnav:hover {
+  border-color: #5f6368;
+}
+
+.monthnav-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.monthnav-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.google-cal-icon {
+  flex-shrink: 0;
+}
+
+.monthnav-brand-text {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #9aa0a6;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.monthnav-today-btn {
+  background: transparent;
+  border: 1px solid #5f6368;
+  color: #8ab4f8;
+  border-radius: 16px;
+  padding: 2px 10px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.monthnav-today-btn:hover {
+  background: rgba(138, 180, 248, 0.1);
+  border-color: #8ab4f8;
+}
+
+.monthnav-center {
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  background: #1a1a1e;
-  border-radius: 12px;
-  padding: 8px 0;
-}
-
-.monthnav-btn {
-  background: transparent;
-  border: none;
-  color: #9aa0a6;
-  font-size: 0.7rem;
-  cursor: pointer;
-  line-height: 1;
-  padding: 2px 8px;
-  transition: color 0.15s ease;
-}
-
-.monthnav-btn:hover {
-  color: #e8eaed;
+  text-align: center;
+  padding: 2px 0;
 }
 
 .monthnav-label {
-  font-size: 0.75rem;
+  font-size: 1.12rem;
   color: #e8eaed;
   font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
 }
 
+.monthnav-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.monthnav-btn {
+  background: #282a2d;
+  border: 1px solid #3c4043;
+  color: #e8eaed;
+  font-size: 1.15rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: all 0.15s ease;
+}
+
+.monthnav-btn:hover {
+  background: #35373b;
+  border-color: #8ab4f8;
+  color: #8ab4f8;
+  transform: scale(1.05);
+}
+
+.monthnav-btn:active {
+  transform: scale(0.95);
+}
+
+/* =========================================================
+   Video / Pixelated Companion Card
+   ========================================================= */
 .video {
   grid-area: video;
-  background: #1a1a1e;
-  border-radius: 12px;
-  min-height: 100px;
+  background: #1e1f20;
+  border: 1px solid #3c4043;
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.2s ease;
 }
 
+.video:hover {
+  border-color: #5f6368;
+}
+
+.video-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  display: block;
+}
+
+.video-overlay-badge {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(30, 31, 32, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #e8eaed;
+  letter-spacing: 0.03em;
+  pointer-events: none;
+}
+
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  background-color: #81c995;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #81c995;
+  animation: livePulse 2s infinite ease-in-out;
+}
+
+@keyframes livePulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* =========================================================
+   Stat Card Areas
+   ========================================================= */
 .stat1 {
   grid-area: stat1;
+  min-width: 0;
 }
 
 .stat2 {
   grid-area: stat2;
+  min-width: 0;
 }
 
 .stat3 {
   grid-area: stat3;
+  min-width: 0;
 }
 
+/* =========================================================
+   Mini Calendar Area
+   ========================================================= */
 .mini {
   grid-area: mini;
+  min-width: 0;
+}
+
+/* Responsive collapse on smaller viewports */
+@media (max-width: 1080px) {
+  .topbar {
+    grid-template-columns: 180px repeat(3, 1fr) 200px;
+  }
 }

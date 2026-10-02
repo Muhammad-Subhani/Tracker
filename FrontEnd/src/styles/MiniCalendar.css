@@ -1,57 +1,108 @@
+/* Google Calendar Mini Month Picker */
+
 .minicalendar {
   height: 100%;
-  background: #1a1a1e;
-  border: 1px solid #2a2a2f;
-  border-radius: 12px;
-  padding: 10px;
+  background: #1e1f20;
+  border: 1px solid #3c4043;
+  border-radius: 16px;
+  padding: 10px 12px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.2s ease;
+  user-select: none;
+}
+
+.minicalendar:hover {
+  border-color: #5f6368;
 }
 
 .mini-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.75rem;
-  color: #d5d5db;
+  padding: 0 2px 4px 2px;
+}
+
+.mini-header span {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #e8eaed;
+  letter-spacing: -0.01em;
 }
 
 .mini-header button {
-  background: none;
+  background: transparent;
   border: none;
-  color: #d5d5db;
+  color: #9aa0a6;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1.05rem;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  transition: all 0.15s ease;
+}
+
+.mini-header button:hover {
+  background: rgba(232, 234, 237, 0.12);
+  color: #8ab4f8;
 }
 
 .mini-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
+  row-gap: 2px;
+  column-gap: 2px;
   flex: 1;
+  align-content: space-around;
 }
 
 .mini-day-label {
-  font-size: 0.6rem;
-  color: #6c6c74;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: #9aa0a6;
   text-align: center;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .mini-cell {
-  font-size: 0.65rem;
-  color: #c8c8ce;
+  font-size: 0.7rem;
+  color: #e8eaed;
   text-align: center;
-  padding: 2px 0;
-  border-radius: 4px;
+  width: 22px;
+  height: 22px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.mini-cell:not(.empty):hover {
+  background-color: rgba(232, 234, 237, 0.12);
+  color: #ffffff;
 }
 
 .mini-cell.empty {
   visibility: hidden;
+  pointer-events: none;
 }
 
 .mini-cell.today {
-  background: #4f7cff;
-  color: white;
+  background-color: #8ab4f8 !important;
+  color: #131314 !important;
   font-weight: 600;
+  box-shadow: 0 1px 4px rgba(138, 180, 248, 0.4);
 }

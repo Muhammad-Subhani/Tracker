@@ -8,6 +8,7 @@ const { auth_router } = require("./Routes/auth_router.js");
 const { Tracker_Router } = require("./Routes/Tracker_routes.js")
 const { TodoRouter } = require("./Routes/Todo_routes.js")
 const { calendarRouter } = require("./Routes/CalendarRouter.js")
+const { stats_router } = require("./Routes/Stats_router.js")
 const { transporter } = require("./Controller/transporter.js")
 const app = express();
 const corsOtpion = {
@@ -27,6 +28,7 @@ ConnectToDatabase().
 app.use("/Auth", auth_router);
 app.use("/api/todo", TodoRouter);
 app.use("/api/calendar", calendarRouter);
+app.use("/api/GetStats", stats_router);
 app.use("/api", Tracker_Router);
 // listenning 
 app.listen(PORT, () => console.log(`app is curently being listened on port ${PORT}`))

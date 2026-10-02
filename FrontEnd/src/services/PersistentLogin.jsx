@@ -10,7 +10,7 @@ export const PersistentLogin = function() {
     loading,
     setLoading,
   } = useContext(AuthContext);
-  const { refresh } = useRefreshToken();
+  const { refresh, LogOutFromOneDevice } = useRefreshToken();
 
   useEffect(() => {
     console.log("this should run ")
@@ -24,6 +24,9 @@ export const PersistentLogin = function() {
         setAccessToken(newaccesstoken);
       } catch (err) {
         console.error("An error occured !", err);
+        LogOutFromOneDevice();               // clear context/state
+        window.location.href = "/Auth/Login";
+        setAccessToken("");
         setLoading(false);
       }
       finally {

@@ -1,42 +1,364 @@
+/* Google Material Design 3 Navigation Drawer & Rail */
+
 .slidebar {
   height: 100vh;
-  background-color: gray;
-  border: 1px solid darkslategrey;
+  background-color: #1e1f20;
+  border-right: 1px solid #3c4043;
   display: flex;
   flex-direction: column;
-  transition: width 0.3s ease;
-  overflow: hidden;
-  /* important — hides text as width shrinks */
+  transition: width 0.25s cubic-bezier(0.2, 0, 0, 1);
+  overflow-x: hidden;
+  overflow-y: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  font-family: "Google Sans", Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #e8eaed;
+  z-index: 50;
 }
 
+/* Open / Expanded Drawer */
 .slidebar.open {
-  width: 220px;
+  width: 256px;
+  min-width: 256px;
 }
 
-.slidebar.closed {
-  width: 60px;
-  /* enough for just icons */
+/* Closed / Collapsed Navigation Rail */
+.slidebar.closed,
+.slidebar.close,
+.slidebar.collapsed {
+  width: 72px;
+  min-width: 72px;
+}
+
+/* Thin Scrollbar for Drawer */
+.slidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.slidebar::-webkit-scrollbar-thumb {
+  background: #3c4043;
+  border-radius: 4px;
+}
+
+/* =========================================================
+   Slidebar Header: Hamburger & Brand
+   ========================================================= */
+.slidebar-header {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 12px;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .toggle-btn {
-  background: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   border: none;
-  color: white;
-  font-size: 1.2rem;
-  padding: 12px;
+  background: transparent;
+  color: #e8eaed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  align-self: flex-start;
+  padding: 0;
+  margin: 0;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  flex-shrink: 0;
 }
 
-.slidebar-links {
+.toggle-btn:hover {
+  background-color: rgba(232, 234, 237, 0.08);
+  color: #ffffff;
+}
+
+.toggle-btn:active {
+  background-color: rgba(232, 234, 237, 0.16);
+  transform: scale(0.95);
+}
+
+.slidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.slidebar.closed .slidebar-brand,
+.slidebar.close .slidebar-brand {
+  opacity: 0;
+  transform: translateX(-12px);
+  pointer-events: none;
+}
+
+.brand-logo {
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #e8eaed;
+  letter-spacing: -0.01em;
+}
+
+.brand-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: rgba(138, 180, 248, 0.14);
+  color: #8ab4f8;
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+/* =========================================================
+   Slidebar Content & Navigation Lists
+   ========================================================= */
+.slidebar-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
+  padding: 6px 0;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
-.slidebar-links a {
-  color: white;
-  text-decoration: none;
-  padding: 10px 16px;
+.slidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-section-title {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9aa0a6;
+  padding: 10px 24px 4px 24px;
   white-space: nowrap;
-  /* prevents text wrapping while shrinking */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.15s ease, height 0.15s ease;
+}
+
+.slidebar.closed .nav-section-title,
+.slidebar.close .nav-section-title {
+  opacity: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+.slidebar-divider {
+  height: 1px;
+  background-color: #3c4043;
+  margin: 10px 16px;
+  flex-shrink: 0;
+  transition: margin 0.2s ease;
+}
+
+.slidebar.closed .slidebar-divider,
+.slidebar.close .slidebar-divider {
+  margin: 10px 12px;
+}
+
+/* =========================================================
+   Navigation Item (Google Material 3 Pill Button)
+   ========================================================= */
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  border-radius: 24px;
+  border: none;
+  background: transparent;
+  color: #c4c7c5;
+  cursor: pointer;
+  padding: 0 18px;
+  margin: 1px 12px;
+  text-align: left;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease, width 0.2s ease;
+  box-sizing: border-box;
+}
+
+.nav-item:hover {
+  background-color: rgba(232, 234, 237, 0.08);
+  color: #e8eaed;
+}
+
+.nav-item:active {
+  background-color: rgba(232, 234, 237, 0.14);
+}
+
+/* Active State (Google Material 3 Selected Pill) */
+.nav-item.active {
+  background-color: #004a77;
+  color: #d3e3fd;
+  font-weight: 600;
+}
+
+.nav-item.active:hover {
+  background-color: #005a91;
+  color: #ffffff;
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #9aa0a6;
+  transition: color 0.15s ease;
+}
+
+.nav-item:hover .nav-icon {
+  color: #e8eaed;
+}
+
+.nav-item.active .nav-icon {
+  color: #8ab4f8;
+}
+
+.nav-label {
+  margin-left: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Collapsed Navigation Rail Adjustments */
+.slidebar.closed .nav-item,
+.slidebar.close .nav-item {
+  width: 52px;
+  height: 44px;
+  padding: 0;
+  margin: 2px auto;
+  justify-content: center;
+  border-radius: 22px;
+}
+
+.slidebar.closed .nav-label,
+.slidebar.close .nav-label {
+  opacity: 0;
+  width: 0;
+  margin: 0;
+  transform: translateX(-8px);
+  pointer-events: none;
+}
+
+/* =========================================================
+   Tooltips in Collapsed Rail Mode
+   ========================================================= */
+.slidebar.closed .nav-item::after,
+.slidebar.close .nav-item::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%) scale(0.92);
+  background-color: #282a2d;
+  color: #e8eaed;
+  font-size: 0.76rem;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid #3c4043;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 1000;
+}
+
+.slidebar.closed .nav-item:hover::after,
+.slidebar.close .nav-item:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+/* =========================================================
+   Slidebar Footer / User Profile Card
+   ========================================================= */
+.slidebar-footer {
+  padding: 12px;
+  border-top: 1px solid #3c4043;
+  flex-shrink: 0;
+}
+
+.user-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 20px;
+  transition: background-color 0.15s ease;
+  cursor: pointer;
+}
+
+.user-profile-card:hover {
+  background-color: rgba(232, 234, 237, 0.06);
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+}
+
+.slidebar.closed .user-info,
+.slidebar.close .user-info {
+  opacity: 0;
+  width: 0;
+  pointer-events: none;
+}
+
+.user-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #e8eaed;
+}
+
+.user-status {
+  font-size: 0.68rem;
+  color: #81c995;
+  font-weight: 500;
 }
